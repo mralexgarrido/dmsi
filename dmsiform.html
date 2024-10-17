@@ -22,7 +22,7 @@
         th, td {
             border: 1px solid #ddd;
             padding: 8px;
-            text-align: left;
+            text-align: center;
         }
         th {
             background-color: #f2f2f2;
@@ -33,10 +33,50 @@
         .total-row {
             font-weight: bold;
         }
+td.question {
+    font-size: 13px;
+    font-weight: 700;
+}
+td.label {
+    font-size: 12px;
+}
+h3 {
+    margin-top: 1px;
+    margin-bottom: 1px;
+}
+ul {
+    margin-top: 1px;
+}
     </style>
 </head>
 <body>
     <h1>DMSI Assessment Form</h1>
+<div class="instructions" style="font-size: 12px; display: flex; flex-wrap: wrap;">
+    <div style="flex: 1 1 300px; padding: 10px;">
+        <h3 style="font-size: 14px;">DMSI Assessment Instructions</h3>
+        <ul>
+            <li>No right or wrong answers. Go with your initial instinct.</li>
+            <li>For each question, assign scores:
+                <ul>
+                    <li>8 = most like you</li>
+                    <li>4 = second most like you</li>
+                    <li>2 = third most like you</li>
+                    <li>1 = least like you</li>
+                </ul>
+            </li>
+            <li>Use each score (8, 4, 2, 1) only once per question.</li>
+            <li>Reflect your true self, not what you think is desirable.</li>
+        </ul>
+    </div>
+    <div style="flex: 1 1 300px; padding: 10px;">
+        <ul>
+            <li>Consider typical work decisions when responding.</li>
+            <li>Total the columns after completing all questions.</li>
+        </ul>
+        <p><strong>Example:</strong> Q1: 8 for "Recognition", 4 for "Status", 2 for "Security", 1 for "Excellence".</p>
+        <p style="margin-top: 20px; font-style: italic;">Source: Rowe, A. J., & Mason, O. R. (1987). Managing with style: A guide to understanding, assessing, and improving decision making. San Francisco, CA: Jossey-Bass.</p>
+    </div>
+</div>
     <form id="dmsiForm">
         <table>
             <tbody><tr>
@@ -47,144 +87,144 @@
                 <th>Type 4</th>
             </tr>
             <tr>
-                <td>My prime objective is to:</td>
-                <td>Have a position with status <input type="number" name="q1t1" min="0" max="8"></td>
-                <td>Be the best in my field <input type="number" name="q1t2" min="0" max="8"></td>
-                <td>Achieve recognition for my work <input type="number" name="q1t3" min="0" max="8"></td>
-                <td>Feel secure in my job <input type="number" name="q1t4" min="0" max="8"></td>
+                <td class="question">My prime objective is to:</td>
+                <td class="label">Have a position with status <br><input type="number" name="q1t1" min="0" max="8"></td>
+                <td class="label">Be the best in my field <br><input type="number" name="q1t2" min="0" max="8"></td>
+                <td class="label">Achieve recognition for my work <br><input type="number" name="q1t3" min="0" max="8"></td>
+                <td class="label">Feel secure in my job <br><input type="number" name="q1t4" min="0" max="8"></td>
+            </tr>
+            <tr style="background-color: #f7f7f7;">
+                <td class="question">I enjoy jobs that:</td>
+                <td class="label">Are technical and well defined <br><input type="number" name="q2t1" min="0" max="8"></td>
+                <td class="label">Have considerable variety <br><input type="number" name="q2t2" min="0" max="8"></td>
+                <td class="label">Allow independent action <br><input type="number" name="q2t3" min="0" max="8"></td>
+                <td class="label">Involve people <br><input type="number" name="q2t4" min="0" max="8"></td>
             </tr>
             <tr>
-                <td>I enjoy jobs that:</td>
-                <td>Are technical and well defined <input type="number" name="q2t1" min="0" max="8"></td>
-                <td>Have considerable variety <input type="number" name="q2t2" min="0" max="8"></td>
-                <td>Allow independent action <input type="number" name="q2t3" min="0" max="8"></td>
-                <td>Involve people <input type="number" name="q2t4" min="0" max="8"></td>
+                <td class="question">I expect people working for me to be:</td>
+                <td class="label">Productive and fast <br><input type="number" name="q3t1" min="0" max="8"></td>
+                <td class="label">Highly capable <br><input type="number" name="q3t2" min="0" max="8"></td>
+                <td class="label">Committed and responsive <br><input type="number" name="q3t3" min="0" max="8"></td>
+                <td class="label">Receptive to suggestions <br><input type="number" name="q3t4" min="0" max="8"></td>
+            </tr>
+            <tr style="background-color: #f7f7f7;">
+                <td class="question">In my job, I look for:</td>
+                <td class="label">Practical results <br><input type="number" name="q4t1" min="0" max="8"></td>
+                <td class="label">The best solutions <br><input type="number" name="q4t2" min="0" max="8"></td>
+                <td class="label">New approaches or ideas <br><input type="number" name="q4t3" min="0" max="8"></td>
+                <td class="label">Good working environment <br><input type="number" name="q4t4" min="0" max="8"></td>
             </tr>
             <tr>
-                <td>I expect people working for me to be:</td>
-                <td>Productive and fast <input type="number" name="q3t1" min="0" max="8"></td>
-                <td>Highly capable <input type="number" name="q3t2" min="0" max="8"></td>
-                <td>Committed and responsive <input type="number" name="q3t3" min="0" max="8"></td>
-                <td>Receptive to suggestions <input type="number" name="q3t4" min="0" max="8"></td>
+                <td class="question">I communicate best with others:</td>
+                <td class="label">In a direct one-to-one basis <br><input type="number" name="q5t1" min="0" max="8"></td>
+                <td class="label">In writing <br><input type="number" name="q5t2" min="0" max="8"></td>
+                <td class="label">By having a group discussion <br><input type="number" name="q5t3" min="0" max="8"></td>
+                <td class="label">In a formal meeting <br><input type="number" name="q5t4" min="0" max="8"></td>
+            </tr>
+            <tr style="background-color: #f7f7f7;">
+                <td class="question">In my planning I emphasize:</td>
+                <td class="label">Current problems <br><input type="number" name="q6t1" min="0" max="8"></td>
+                <td class="label">Meeting objectives <br><input type="number" name="q6t2" min="0" max="8"></td>
+                <td class="label">Future goals <br><input type="number" name="q6t3" min="0" max="8"></td>
+                <td class="label">Developing people <br><input type="number" name="q6t4" min="0" max="8"></td>
             </tr>
             <tr>
-                <td>In my job, I look for:</td>
-                <td>Practical results <input type="number" name="q4t1" min="0" max="8"></td>
-                <td>The best solutions <input type="number" name="q4t2" min="0" max="8"></td>
-                <td>New approaches or ideas <input type="number" name="q4t3" min="0" max="8"></td>
-                <td>Good working environment <input type="number" name="q4t4" min="0" max="8"></td>
+                <td class="question">When faced with solving a problem, I:</td>
+                <td class="label">Rely on proven approaches <br><input type="number" name="q7t1" min="0" max="8"></td>
+                <td class="label">Apply careful analysis <br><input type="number" name="q7t2" min="0" max="8"></td>
+                <td class="label">Look for creative approaches <br><input type="number" name="q7t3" min="0" max="8"></td>
+                <td class="label">Rely on my feelings <br><input type="number" name="q7t4" min="0" max="8"></td>
+            </tr>
+            <tr style="background-color: #f7f7f7;">
+                <td class="question">When using information, I prefer:</td>
+                <td class="label">Specific facts <br><input type="number" name="q8t1" min="0" max="8"></td>
+                <td class="label">Accurate and complete data <br><input type="number" name="q8t2" min="0" max="8"></td>
+                <td class="label">Broad coverage of many options <br><input type="number" name="q8t3" min="0" max="8"></td>
+                <td class="label">Limited data that is easily understood <br><input type="number" name="q8t4" min="0" max="8"></td>
             </tr>
             <tr>
-                <td>I communicate best with others:</td>
-                <td>In a direct one-to-one basis <input type="number" name="q5t1" min="0" max="8"></td>
-                <td>In writing <input type="number" name="q5t2" min="0" max="8"></td>
-                <td>By having a group discussion <input type="number" name="q5t3" min="0" max="8"></td>
-                <td>In a formal meeting <input type="number" name="q5t4" min="0" max="8"></td>
+                <td class="question">When I am not sure about what to do, I:</td>
+                <td class="label">Rely on intuition <br><input type="number" name="q9t1" min="0" max="8"></td>
+                <td class="label">Search for facts <br><input type="number" name="q9t2" min="0" max="8"></td>
+                <td class="label">Look for a possible compromise <br><input type="number" name="q9t3" min="0" max="8"></td>
+                <td class="label">Wait before making a decision <br><input type="number" name="q9t4" min="0" max="8"></td>
+            </tr>
+            <tr style="background-color: #f7f7f7;">
+                <td class="question">Whenever possible, I avoid:</td>
+                <td class="label">Long debates <br><input type="number" name="q10t1" min="0" max="8"></td>
+                <td class="label">Incomplete work <br><input type="number" name="q10t2" min="0" max="8"></td>
+                <td class="label">Using numbers or formulas <br><input type="number" name="q10t3" min="0" max="8"></td>
+                <td class="label">Conflict with others <br><input type="number" name="q10t4" min="0" max="8"></td>
             </tr>
             <tr>
-                <td>In my planning I emphasize:</td>
-                <td>Current problems <input type="number" name="q6t1" min="0" max="8"></td>
-                <td>Meeting objectives <input type="number" name="q6t2" min="0" max="8"></td>
-                <td>Future goals <input type="number" name="q6t3" min="0" max="8"></td>
-                <td>Developing people <input type="number" name="q6t4" min="0" max="8"></td>
+                <td class="question">I am especially good at:</td>
+                <td class="label">Remembering dates and facts <br><input type="number" name="q11t1" min="0" max="8"></td>
+                <td class="label">Solving difficult problems <br><input type="number" name="q11t2" min="0" max="8"></td>
+                <td class="label">Seeing many possibilities <br><input type="number" name="q11t3" min="0" max="8"></td>
+                <td class="label">Interacting with others <br><input type="number" name="q11t4" min="0" max="8"></td>
+            </tr>
+            <tr style="background-color: #f7f7f7;">
+                <td class="question">When time is important, I:</td>
+                <td class="label">Decide and act quickly <br><input type="number" name="q12t1" min="0" max="8"></td>
+                <td class="label">Follow plans and priorities <br><input type="number" name="q12t2" min="0" max="8"></td>
+                <td class="label">Refuse to be pressured <br><input type="number" name="q12t3" min="0" max="8"></td>
+                <td class="label">Seek guidance or support <br><input type="number" name="q12t4" min="0" max="8"></td>
             </tr>
             <tr>
-                <td>When faced with solving a problem, I:</td>
-                <td>Rely on proven approaches <input type="number" name="q7t1" min="0" max="8"></td>
-                <td>Apply careful analysis <input type="number" name="q7t2" min="0" max="8"></td>
-                <td>Look for creative approaches <input type="number" name="q7t3" min="0" max="8"></td>
-                <td>Rely on my feelings <input type="number" name="q7t4" min="0" max="8"></td>
+                <td class="question">In social settings I generally:</td>
+                <td class="label">Speak with others <br><input type="number" name="q13t1" min="0" max="8"></td>
+                <td class="label">Think about what is being said <br><input type="number" name="q13t2" min="0" max="8"></td>
+                <td class="label">Observe what is going on <br><input type="number" name="q13t3" min="0" max="8"></td>
+                <td class="label">Listen to the conversation <br><input type="number" name="q13t4" min="0" max="8"></td>
+            </tr>
+            <tr style="background-color: #f7f7f7;">
+                <td class="question">I am good at remembering:</td>
+                <td class="label">People's names <br><input type="number" name="q14t1" min="0" max="8"></td>
+                <td class="label">Places we met <br><input type="number" name="q14t2" min="0" max="8"></td>
+                <td class="label">People's faces <br><input type="number" name="q14t3" min="0" max="8"></td>
+                <td class="label">People's personality <br><input type="number" name="q14t4" min="0" max="8"></td>
             </tr>
             <tr>
-                <td>When using information, I prefer:</td>
-                <td>Specific facts <input type="number" name="q8t1" min="0" max="8"></td>
-                <td>Accurate and complete data <input type="number" name="q8t2" min="0" max="8"></td>
-                <td>Broad coverage of many options <input type="number" name="q8t3" min="0" max="8"></td>
-                <td>Limited data that is easily understood <input type="number" name="q8t4" min="0" max="8"></td>
+                <td class="question">The work I do provides me:</td>
+                <td class="label">The power to influence others <br><input type="number" name="q15t1" min="0" max="8"></td>
+                <td class="label">Challenging assignments <br><input type="number" name="q15t2" min="0" max="8"></td>
+                <td class="label">Achieving my personal goals <br><input type="number" name="q15t3" min="0" max="8"></td>
+                <td class="label">Acceptance by the group <br><input type="number" name="q15t4" min="0" max="8"></td>
+            </tr>
+            <tr style="background-color: #f7f7f7;">
+                <td class="question">I work well with those who are:</td>
+                <td class="label">Energetic and ambitious <br><input type="number" name="q16t1" min="0" max="8"></td>
+                <td class="label">Self-confident <br><input type="number" name="q16t2" min="0" max="8"></td>
+                <td class="label">Open minded <br><input type="number" name="q16t3" min="0" max="8"></td>
+                <td class="label">Polite and trusting <br><input type="number" name="q16t4" min="0" max="8"></td>
             </tr>
             <tr>
-                <td>When I am not sure about what to do, I:</td>
-                <td>Rely on intuition <input type="number" name="q9t1" min="0" max="8"></td>
-                <td>Search for facts <input type="number" name="q9t2" min="0" max="8"></td>
-                <td>Look for a possible compromise <input type="number" name="q9t3" min="0" max="8"></td>
-                <td>Wait before making a decision <input type="number" name="q9t4" min="0" max="8"></td>
+                <td class="question">When under stress, I:</td>
+                <td class="label">Become anxious <br><input type="number" name="q17t1" min="0" max="8"></td>
+                <td class="label">Concentrate on the problem <br><input type="number" name="q17t2" min="0" max="8"></td>
+                <td class="label">Become frustrated <br><input type="number" name="q17t3" min="0" max="8"></td>
+                <td class="label">Am forgetful <br><input type="number" name="q17t4" min="0" max="8"></td>
+            </tr>
+            <tr style="background-color: #f7f7f7;">
+                <td class="question">Others consider me:</td>
+                <td class="label">Aggressive <br><input type="number" name="q18t1" min="0" max="8"></td>
+                <td class="label">Disciplined <br><input type="number" name="q18t2" min="0" max="8"></td>
+                <td class="label">Imaginative <br><input type="number" name="q18t3" min="0" max="8"></td>
+                <td class="label">Supportive <br><input type="number" name="q18t4" min="0" max="8"></td>
             </tr>
             <tr>
-                <td>Whenever possible, I avoid:</td>
-                <td>Long debates <input type="number" name="q10t1" min="0" max="8"></td>
-                <td>Incomplete work <input type="number" name="q10t2" min="0" max="8"></td>
-                <td>Using numbers or formulas <input type="number" name="q10t3" min="0" max="8"></td>
-                <td>Conflict with others <input type="number" name="q10t4" min="0" max="8"></td>
+                <td class="question">My decisions typically are:</td>
+                <td class="label">Realistic and direct <br><input type="number" name="q19t1" min="0" max="8"></td>
+                <td class="label">Systematic or abstract <br><input type="number" name="q19t2" min="0" max="8"></td>
+                <td class="label">Broad and flexible <br><input type="number" name="q19t3" min="0" max="8"></td>
+                <td class="label">Sensitive to the needs of others <br><input type="number" name="q19t4" min="0" max="8"></td>
             </tr>
-            <tr>
-                <td>I am especially good at:</td>
-                <td>Remembering dates and facts <input type="number" name="q11t1" min="0" max="8"></td>
-                <td>Solving difficult problems <input type="number" name="q11t2" min="0" max="8"></td>
-                <td>Seeing many possibilities <input type="number" name="q11t3" min="0" max="8"></td>
-                <td>Interacting with others <input type="number" name="q11t4" min="0" max="8"></td>
-            </tr>
-            <tr>
-                <td>When time is important, I:</td>
-                <td>Decide and act quickly <input type="number" name="q12t1" min="0" max="8"></td>
-                <td>Follow plans and priorities <input type="number" name="q12t2" min="0" max="8"></td>
-                <td>Refuse to be pressured <input type="number" name="q12t3" min="0" max="8"></td>
-                <td>Seek guidance or support <input type="number" name="q12t4" min="0" max="8"></td>
-            </tr>
-            <tr>
-                <td>In social settings I generally:</td>
-                <td>Speak with others <input type="number" name="q13t1" min="0" max="8"></td>
-                <td>Think about what is being said <input type="number" name="q13t2" min="0" max="8"></td>
-                <td>Observe what is going on <input type="number" name="q13t3" min="0" max="8"></td>
-                <td>Listen to the conversation <input type="number" name="q13t4" min="0" max="8"></td>
-            </tr>
-            <tr>
-                <td>I am good at remembering:</td>
-                <td>People's names <input type="number" name="q14t1" min="0" max="8"></td>
-                <td>Places we met <input type="number" name="q14t2" min="0" max="8"></td>
-                <td>People's faces <input type="number" name="q14t3" min="0" max="8"></td>
-                <td>People's personality <input type="number" name="q14t4" min="0" max="8"></td>
-            </tr>
-            <tr>
-                <td>The work I do provides me:</td>
-                <td>The power to influence others <input type="number" name="q15t1" min="0" max="8"></td>
-                <td>Challenging assignments <input type="number" name="q15t2" min="0" max="8"></td>
-                <td>Achieving my personal goals <input type="number" name="q15t3" min="0" max="8"></td>
-                <td>Acceptance by the group <input type="number" name="q15t4" min="0" max="8"></td>
-            </tr>
-            <tr>
-                <td>I work well with those who are:</td>
-                <td>Energetic and ambitious <input type="number" name="q16t1" min="0" max="8"></td>
-                <td>Self-confident <input type="number" name="q16t2" min="0" max="8"></td>
-                <td>Open minded <input type="number" name="q16t3" min="0" max="8"></td>
-                <td>Polite and trusting <input type="number" name="q16t4" min="0" max="8"></td>
-            </tr>
-            <tr>
-                <td>When under stress, I:</td>
-                <td>Become anxious <input type="number" name="q17t1" min="0" max="8"></td>
-                <td>Concentrate on the problem <input type="number" name="q17t2" min="0" max="8"></td>
-                <td>Become frustrated <input type="number" name="q17t3" min="0" max="8"></td>
-                <td>Am forgetful <input type="number" name="q17t4" min="0" max="8"></td>
-            </tr>
-            <tr>
-                <td>Others consider me:</td>
-                <td>Aggressive <input type="number" name="q18t1" min="0" max="8"></td>
-                <td>Disciplined <input type="number" name="q18t2" min="0" max="8"></td>
-                <td>Imaginative <input type="number" name="q18t3" min="0" max="8"></td>
-                <td>Supportive <input type="number" name="q18t4" min="0" max="8"></td>
-            </tr>
-            <tr>
-                <td>My decisions typically are:</td>
-                <td>Realistic and direct <input type="number" name="q19t1" min="0" max="8"></td>
-                <td>Systematic or abstract <input type="number" name="q19t2" min="0" max="8"></td>
-                <td>Broad and flexible <input type="number" name="q19t3" min="0" max="8"></td>
-                <td>Sensitive to the needs of others <input type="number" name="q19t4" min="0" max="8"></td>
-            </tr>
-            <tr>
-                <td>I dislike:</td>
-                <td>Losing control <input type="number" name="q20t1" min="0" max="8"></td>
-                <td>Boring work <input type="number" name="q20t2" min="0" max="8"></td>
-                <td>Following rules <input type="number" name="q20t3" min="0" max="8"></td>
-                <td>Being rejected <input type="number" name="q20t4" min="0" max="8"></td>
+            <tr style="background-color: #f7f7f7;">
+                <td class="question">I dislike:</td>
+                <td class="label">Losing control <br><input type="number" name="q20t1" min="0" max="8"></td>
+                <td class="label">Boring work <br><input type="number" name="q20t2" min="0" max="8"></td>
+                <td class="label">Following rules <br><input type="number" name="q20t3" min="0" max="8"></td>
+                <td class="label">Being rejected <br><input type="number" name="q20t4" min="0" max="8"></td>
             </tr>
             <tr class="total-row">
                 <td>Total Score:</td>
