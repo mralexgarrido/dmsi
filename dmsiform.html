@@ -47,6 +47,8 @@ h3 {
 ul {
     margin-top: 1px;
 }
+#styleRow { display: none; background-color: #f7f7f7; }
+        .label { font-weight: bold; }
     </style>
 </head>
 <body>
@@ -233,39 +235,54 @@ ul {
                 <td id="total3">0</td>
                 <td id="total4">0</td>
             </tr>
+<tr id="styleRow">
+            <td class="question">Your Decision-Making Style is the Highest Score</td>
+            <td class="label">Directive</td>
+            <td class="label">Analytic</td>
+            <td class="label">Conceptual</td>
+            <td class="label">Behavioral</td>
+        </tr>
         </tbody></table>
         <div id="totalScore">Total Score: 0</div>
     </form>
 
-    <script>
-        const form = document.getElementById('dmsiForm');
-        const total1 = document.getElementById('total1');
-        const total2 = document.getElementById('total2');
-        const total3 = document.getElementById('total3');
-        const total4 = document.getElementById('total4');
-        const totalScore = document.getElementById('totalScore');
+   <script>
+    const form = document.getElementById('dmsiForm');
+    const total1 = document.getElementById('total1');
+    const total2 = document.getElementById('total2');
+    const total3 = document.getElementById('total3');
+    const total4 = document.getElementById('total4');
+    const totalScore = document.getElementById('totalScore');
+    const styleRow = document.getElementById('styleRow');
 
-        form.addEventListener('input', calculateTotals);
+    form.addEventListener('input', calculateTotals);
 
-        function calculateTotals() {
-            let sum1 = 0, sum2 = 0, sum3 = 0, sum4 = 0;
+    function calculateTotals() {
+        let sum1 = 0, sum2 = 0, sum3 = 0, sum4 = 0;
 
-            for (let i = 1; i <= 20; i++) {
-                sum1 += parseInt(form[`q${i}t1`].value) || 0;
-                sum2 += parseInt(form[`q${i}t2`].value) || 0;
-                sum3 += parseInt(form[`q${i}t3`].value) || 0;
-                sum4 += parseInt(form[`q${i}t4`].value) || 0;
-            }
-
-            total1.textContent = sum1;
-            total2.textContent = sum2;
-            total3.textContent = sum3;
-            total4.textContent = sum4;
-
-            const grandTotal = sum1 + sum2 + sum3 + sum4;
-            totalScore.textContent = `Total Score: ${grandTotal}`;
+        for (let i = 1; i <= 20; i++) {
+            sum1 += parseInt(form[`q${i}t1`].value) || 0;
+            sum2 += parseInt(form[`q${i}t2`].value) || 0;
+            sum3 += parseInt(form[`q${i}t3`].value) || 0;
+            sum4 += parseInt(form[`q${i}t4`].value) || 0;
         }
-    </script>
+
+        total1.textContent = sum1;
+        total2.textContent = sum2;
+        total3.textContent = sum3;
+        total4.textContent = sum4;
+
+        const grandTotal = sum1 + sum2 + sum3 + sum4;
+        totalScore.textContent = `Total Score: ${grandTotal}`;
+
+        // New functionality to display styleRow
+        if (grandTotal >= 299) {
+            styleRow.style.display = 'table-row';
+        } else {
+            styleRow.style.display = 'none';
+        }
+    }
+</script>
 
 
 </body></html>
