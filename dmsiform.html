@@ -1,0 +1,231 @@
+<!DOCTYPE html><html lang="en"><head><meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://code.jquery.com https://unpkg.com https://d3js.org https://threejs.org https://cdn.plot.ly https://stackpath.bootstrapcdn.com https://maps.googleapis.com https://cdn.tailwindcss.com https://ajax.googleapis.com https://kit.fontawesome.com https://cdn.datatables.net https://maxcdn.bootstrapcdn.com https://code.highcharts.com https://tako-static-assets-production.s3.amazonaws.com https://www.youtube.com https://fonts.googleapis.com https://fonts.gstatic.com https://pfst.cf2.poecdn.net https://i.imgur.com https://wikimedia.org https://*.icons8.com https://*.giphy.com https://picsum.photos https://images.unsplash.com; frame-src 'self' https://www.youtube.com https://trytako.com; child-src 'self'; manifest-src 'self'; worker-src 'self'; upgrade-insecure-requests; block-all-mixed-content;">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DMSI Assessment Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        input[type="number"] {
+            width: 50px;
+        }
+        .total-row {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>DMSI Assessment Form</h1>
+    <form id="dmsiForm">
+        <table>
+            <tbody><tr>
+                <th>Question</th>
+                <th>Type 1</th>
+                <th>Type 2</th>
+                <th>Type 3</th>
+                <th>Type 4</th>
+            </tr>
+            <tr>
+                <td>My prime objective is to:</td>
+                <td>Have a position with status <input type="number" name="q1t1" min="0" max="8"></td>
+                <td>Be the best in my field <input type="number" name="q1t2" min="0" max="8"></td>
+                <td>Achieve recognition for my work <input type="number" name="q1t3" min="0" max="8"></td>
+                <td>Feel secure in my job <input type="number" name="q1t4" min="0" max="8"></td>
+            </tr>
+            <tr>
+                <td>I enjoy jobs that:</td>
+                <td>Are technical and well defined <input type="number" name="q2t1" min="0" max="8"></td>
+                <td>Have considerable variety <input type="number" name="q2t2" min="0" max="8"></td>
+                <td>Allow independent action <input type="number" name="q2t3" min="0" max="8"></td>
+                <td>Involve people <input type="number" name="q2t4" min="0" max="8"></td>
+            </tr>
+            <tr>
+                <td>I expect people working for me to be:</td>
+                <td>Productive and fast <input type="number" name="q3t1" min="0" max="8"></td>
+                <td>Highly capable <input type="number" name="q3t2" min="0" max="8"></td>
+                <td>Committed and responsive <input type="number" name="q3t3" min="0" max="8"></td>
+                <td>Receptive to suggestions <input type="number" name="q3t4" min="0" max="8"></td>
+            </tr>
+            <tr>
+                <td>In my job, I look for:</td>
+                <td>Practical results <input type="number" name="q4t1" min="0" max="8"></td>
+                <td>The best solutions <input type="number" name="q4t2" min="0" max="8"></td>
+                <td>New approaches or ideas <input type="number" name="q4t3" min="0" max="8"></td>
+                <td>Good working environment <input type="number" name="q4t4" min="0" max="8"></td>
+            </tr>
+            <tr>
+                <td>I communicate best with others:</td>
+                <td>In a direct one-to-one basis <input type="number" name="q5t1" min="0" max="8"></td>
+                <td>In writing <input type="number" name="q5t2" min="0" max="8"></td>
+                <td>By having a group discussion <input type="number" name="q5t3" min="0" max="8"></td>
+                <td>In a formal meeting <input type="number" name="q5t4" min="0" max="8"></td>
+            </tr>
+            <tr>
+                <td>In my planning I emphasize:</td>
+                <td>Current problems <input type="number" name="q6t1" min="0" max="8"></td>
+                <td>Meeting objectives <input type="number" name="q6t2" min="0" max="8"></td>
+                <td>Future goals <input type="number" name="q6t3" min="0" max="8"></td>
+                <td>Developing people <input type="number" name="q6t4" min="0" max="8"></td>
+            </tr>
+            <tr>
+                <td>When faced with solving a problem, I:</td>
+                <td>Rely on proven approaches <input type="number" name="q7t1" min="0" max="8"></td>
+                <td>Apply careful analysis <input type="number" name="q7t2" min="0" max="8"></td>
+                <td>Look for creative approaches <input type="number" name="q7t3" min="0" max="8"></td>
+                <td>Rely on my feelings <input type="number" name="q7t4" min="0" max="8"></td>
+            </tr>
+            <tr>
+                <td>When using information, I prefer:</td>
+                <td>Specific facts <input type="number" name="q8t1" min="0" max="8"></td>
+                <td>Accurate and complete data <input type="number" name="q8t2" min="0" max="8"></td>
+                <td>Broad coverage of many options <input type="number" name="q8t3" min="0" max="8"></td>
+                <td>Limited data that is easily understood <input type="number" name="q8t4" min="0" max="8"></td>
+            </tr>
+            <tr>
+                <td>When I am not sure about what to do, I:</td>
+                <td>Rely on intuition <input type="number" name="q9t1" min="0" max="8"></td>
+                <td>Search for facts <input type="number" name="q9t2" min="0" max="8"></td>
+                <td>Look for a possible compromise <input type="number" name="q9t3" min="0" max="8"></td>
+                <td>Wait before making a decision <input type="number" name="q9t4" min="0" max="8"></td>
+            </tr>
+            <tr>
+                <td>Whenever possible, I avoid:</td>
+                <td>Long debates <input type="number" name="q10t1" min="0" max="8"></td>
+                <td>Incomplete work <input type="number" name="q10t2" min="0" max="8"></td>
+                <td>Using numbers or formulas <input type="number" name="q10t3" min="0" max="8"></td>
+                <td>Conflict with others <input type="number" name="q10t4" min="0" max="8"></td>
+            </tr>
+            <tr>
+                <td>I am especially good at:</td>
+                <td>Remembering dates and facts <input type="number" name="q11t1" min="0" max="8"></td>
+                <td>Solving difficult problems <input type="number" name="q11t2" min="0" max="8"></td>
+                <td>Seeing many possibilities <input type="number" name="q11t3" min="0" max="8"></td>
+                <td>Interacting with others <input type="number" name="q11t4" min="0" max="8"></td>
+            </tr>
+            <tr>
+                <td>When time is important, I:</td>
+                <td>Decide and act quickly <input type="number" name="q12t1" min="0" max="8"></td>
+                <td>Follow plans and priorities <input type="number" name="q12t2" min="0" max="8"></td>
+                <td>Refuse to be pressured <input type="number" name="q12t3" min="0" max="8"></td>
+                <td>Seek guidance or support <input type="number" name="q12t4" min="0" max="8"></td>
+            </tr>
+            <tr>
+                <td>In social settings I generally:</td>
+                <td>Speak with others <input type="number" name="q13t1" min="0" max="8"></td>
+                <td>Think about what is being said <input type="number" name="q13t2" min="0" max="8"></td>
+                <td>Observe what is going on <input type="number" name="q13t3" min="0" max="8"></td>
+                <td>Listen to the conversation <input type="number" name="q13t4" min="0" max="8"></td>
+            </tr>
+            <tr>
+                <td>I am good at remembering:</td>
+                <td>People's names <input type="number" name="q14t1" min="0" max="8"></td>
+                <td>Places we met <input type="number" name="q14t2" min="0" max="8"></td>
+                <td>People's faces <input type="number" name="q14t3" min="0" max="8"></td>
+                <td>People's personality <input type="number" name="q14t4" min="0" max="8"></td>
+            </tr>
+            <tr>
+                <td>The work I do provides me:</td>
+                <td>The power to influence others <input type="number" name="q15t1" min="0" max="8"></td>
+                <td>Challenging assignments <input type="number" name="q15t2" min="0" max="8"></td>
+                <td>Achieving my personal goals <input type="number" name="q15t3" min="0" max="8"></td>
+                <td>Acceptance by the group <input type="number" name="q15t4" min="0" max="8"></td>
+            </tr>
+            <tr>
+                <td>I work well with those who are:</td>
+                <td>Energetic and ambitious <input type="number" name="q16t1" min="0" max="8"></td>
+                <td>Self-confident <input type="number" name="q16t2" min="0" max="8"></td>
+                <td>Open minded <input type="number" name="q16t3" min="0" max="8"></td>
+                <td>Polite and trusting <input type="number" name="q16t4" min="0" max="8"></td>
+            </tr>
+            <tr>
+                <td>When under stress, I:</td>
+                <td>Become anxious <input type="number" name="q17t1" min="0" max="8"></td>
+                <td>Concentrate on the problem <input type="number" name="q17t2" min="0" max="8"></td>
+                <td>Become frustrated <input type="number" name="q17t3" min="0" max="8"></td>
+                <td>Am forgetful <input type="number" name="q17t4" min="0" max="8"></td>
+            </tr>
+            <tr>
+                <td>Others consider me:</td>
+                <td>Aggressive <input type="number" name="q18t1" min="0" max="8"></td>
+                <td>Disciplined <input type="number" name="q18t2" min="0" max="8"></td>
+                <td>Imaginative <input type="number" name="q18t3" min="0" max="8"></td>
+                <td>Supportive <input type="number" name="q18t4" min="0" max="8"></td>
+            </tr>
+            <tr>
+                <td>My decisions typically are:</td>
+                <td>Realistic and direct <input type="number" name="q19t1" min="0" max="8"></td>
+                <td>Systematic or abstract <input type="number" name="q19t2" min="0" max="8"></td>
+                <td>Broad and flexible <input type="number" name="q19t3" min="0" max="8"></td>
+                <td>Sensitive to the needs of others <input type="number" name="q19t4" min="0" max="8"></td>
+            </tr>
+            <tr>
+                <td>I dislike:</td>
+                <td>Losing control <input type="number" name="q20t1" min="0" max="8"></td>
+                <td>Boring work <input type="number" name="q20t2" min="0" max="8"></td>
+                <td>Following rules <input type="number" name="q20t3" min="0" max="8"></td>
+                <td>Being rejected <input type="number" name="q20t4" min="0" max="8"></td>
+            </tr>
+            <tr class="total-row">
+                <td>Total Score:</td>
+                <td id="total1">0</td>
+                <td id="total2">0</td>
+                <td id="total3">0</td>
+                <td id="total4">0</td>
+            </tr>
+        </tbody></table>
+        <div id="totalScore">Total Score: 0</div>
+    </form>
+
+    <script>
+        const form = document.getElementById('dmsiForm');
+        const total1 = document.getElementById('total1');
+        const total2 = document.getElementById('total2');
+        const total3 = document.getElementById('total3');
+        const total4 = document.getElementById('total4');
+        const totalScore = document.getElementById('totalScore');
+
+        form.addEventListener('input', calculateTotals);
+
+        function calculateTotals() {
+            let sum1 = 0, sum2 = 0, sum3 = 0, sum4 = 0;
+
+            for (let i = 1; i <= 20; i++) {
+                sum1 += parseInt(form[`q${i}t1`].value) || 0;
+                sum2 += parseInt(form[`q${i}t2`].value) || 0;
+                sum3 += parseInt(form[`q${i}t3`].value) || 0;
+                sum4 += parseInt(form[`q${i}t4`].value) || 0;
+            }
+
+            total1.textContent = sum1;
+            total2.textContent = sum2;
+            total3.textContent = sum3;
+            total4.textContent = sum4;
+
+            const grandTotal = sum1 + sum2 + sum3 + sum4;
+            totalScore.textContent = `Total Score: ${grandTotal}`;
+        }
+    </script>
+
+
+</body></html>
