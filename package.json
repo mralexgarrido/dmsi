@@ -1,0 +1,15 @@
+{
+  "name": "decision-making-style-inventory",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "description": "A private, classroom-ready Decision-Making Style Inventory for creative teams.",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "check": "node --check js/app.js && node --check js/export.js && node --check js/questions.js && node --check js/scoring.js && node --check js/theme-init.js && node --test",
+    "dev": "node scripts/serve.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
