@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#15171a">
+    <meta
+      name="description"
+      content="A private, classroom-ready Decision-Making Style Inventory for exploring directive, analytical, conceptual, and behavioral preferences."
+    >
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'none'; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'"
+    >
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Decision-Making Style Inventory">
+    <meta
+      property="og:description"
+      content="Discover how you tend to make decisions and what your style contributes to a creative team."
+    >
+    <meta property="og:url" content="https://mralexgarrido.github.io/dmsi/">
+    <meta property="og:image" content="https://mralexgarrido.github.io/dmsi/assets/social-card.svg">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="canonical" href="https://mralexgarrido.github.io/dmsi/">
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="css/styles.css">
+    <title>Decision-Making Style Inventory | DMSI</title>
+    <script type="module" src="js/app.js"></script>
+  </head>
+
+  <body>
+    <a class="skip-link" href="#main-content">Skip to the assessment</a>
+
+    <header class="site-header" aria-label="Primary">
+      <a class="brand" href="#intro" data-action="show-intro" aria-label="DMSI home">
+        <span class="brand-mark" aria-hidden="true">
+          <span></span><span></span><span></span><span></span>
+        </span>
+        <span class="brand-copy">
+          <strong>DMSI</strong>
+          <span>Decision-Making Style Inventory</span>
+        </span>
+      </a>
+      <button class="text-button header-action" type="button" data-action="save-exit" hidden>
+        Save and exit
+      </button>
+    </header>
+
+    <main id="main-content" tabindex="-1">
+      <section class="view intro-view" id="intro" data-view="intro" aria-labelledby="intro-title">
+        <div class="hero shell">
+          <div class="hero-copy">
+            <p class="eyebrow">A classroom-ready reflection tool</p>
+            <h1 id="intro-title" tabindex="-1">How do you decide when the brief gets messy?</h1>
+            <p class="hero-lede">
+              Explore the decision-making preferences you bring to creative work. Rank 20
+              workplace scenarios, then receive a practical profile built for reflection,
+              discussion, and stronger team collaboration.
+            </p>
+
+            <div class="hero-actions">
+              <button class="button button-primary" type="button" data-action="start">
+                Start the assessment
+              </button>
+              <a class="button button-secondary" href="#how-it-works">How it works</a>
+            </div>
+
+            <p class="resume-note" data-resume-note hidden>
+              Your progress is saved on this device.
+            </p>
+
+            <ul class="trust-list" aria-label="Assessment details">
+              <li><span aria-hidden="true">20</span> focused prompts</li>
+              <li><span aria-hidden="true">~7</span> minutes</li>
+              <li><span aria-hidden="true">0</span> data uploaded</li>
+            </ul>
+          </div>
+
+          <div class="hero-visual" aria-label="The four decision-making styles">
+            <div class="matrix-card">
+              <div class="matrix-heading">
+                <span>Thinking focus</span>
+                <span>People focus</span>
+              </div>
+              <div class="style-matrix">
+                <article class="matrix-cell">
+                  <span class="matrix-number">01</span>
+                  <h2>Directive</h2>
+                  <p>Turns ambiguity into action.</p>
+                </article>
+                <article class="matrix-cell">
+                  <span class="matrix-number">02</span>
+                  <h2>Analytical</h2>
+                  <p>Builds confidence through evidence.</p>
+                </article>
+                <article class="matrix-cell">
+                  <span class="matrix-number">03</span>
+                  <h2>Conceptual</h2>
+                  <p>Sees possibilities beyond the brief.</p>
+                </article>
+                <article class="matrix-cell">
+                  <span class="matrix-number">04</span>
+                  <h2>Behavioral</h2>
+                  <p>Builds commitment through people.</p>
+                </article>
+              </div>
+              <p class="matrix-caption">Different styles. Better decisions when combined.</p>
+            </div>
+          </div>
+        </div>
+
+        <section class="how-section shell" id="how-it-works" aria-labelledby="how-title">
+          <div class="section-heading">
+            <p class="eyebrow">Simple by design</p>
+            <h2 id="how-title">Rank first. Reflect second. Discuss third.</h2>
+          </div>
+          <ol class="process-grid">
+            <li>
+              <span class="step-number">01</span>
+              <h3>Read the scenario</h3>
+              <p>Think about how you usually behave in real work, not the answer that sounds ideal.</p>
+            </li>
+            <li>
+              <span class="step-number">02</span>
+              <h3>Rank all four responses</h3>
+              <p>Select from most like you to least like you. The tool handles every score automatically.</p>
+            </li>
+            <li>
+              <span class="step-number">03</span>
+              <h3>Use the profile</h3>
+              <p>Review your strengths, pressure points, and the styles that can balance your perspective.</p>
+            </li>
+          </ol>
+        </section>
+
+        <section class="principle-section shell" aria-labelledby="principle-title">
+          <div>
+            <p class="eyebrow">The central idea</p>
+            <h2 id="principle-title">A preference is not a box.</h2>
+          </div>
+          <p>
+            Every style can improve a creative decision. The goal is not to crown one winner. The
+            goal is to notice your default, recognize what it may miss, and invite the right
+            counterweight before the team commits.
+          </p>
+        </section>
+      </section>
+
+      <section class="view assessment-view shell" data-view="assessment" aria-labelledby="question-title" hidden>
+        <div class="assessment-progress" aria-label="Assessment progress">
+          <div class="progress-copy">
+            <span data-question-counter>Question 1 of 20</span>
+            <span data-completion-counter>0 complete</span>
+          </div>
+          <progress
+            class="progress-track"
+            max="20"
+            value="0"
+            aria-label="Questions completed"
+            data-progress
+          >0 of 20 questions complete</progress>
+        </div>
+
+        <article class="question-card">
+          <div class="question-heading">
+            <p class="eyebrow">Your usual work behavior</p>
+            <h1 id="question-title" data-question-title tabindex="-1">My prime objective is to:</h1>
+            <p id="rank-instruction" class="question-instruction">
+              Select each statement in order, from most like you to least like you.
+            </p>
+          </div>
+
+          <div class="rank-legend" aria-label="Ranking scale">
+            <span><strong>1st</strong> Most like me, 8 points</span>
+            <span><strong>2nd</strong> 4 points</span>
+            <span><strong>3rd</strong> 2 points</span>
+            <span><strong>4th</strong> Least like me, 1 point</span>
+          </div>
+
+          <div
+            class="option-list"
+            data-options
+            role="group"
+            aria-describedby="rank-instruction"
+          ></div>
+
+          <p class="selection-status" role="status" aria-live="polite" data-selection-status>
+            Select the statement that is most like you.
+          </p>
+
+          <div class="question-tools">
+            <button class="text-button" type="button" data-action="undo" disabled>Undo last</button>
+            <button class="text-button" type="button" data-action="clear-question" disabled>Clear ranking</button>
+          </div>
+        </article>
+
+        <nav class="assessment-nav" aria-label="Question navigation">
+          <button class="button button-secondary" type="button" data-action="previous" disabled>
+            Previous
+          </button>
+          <button class="button button-primary" type="button" data-action="next" disabled>
+            Continue
+          </button>
+        </nav>
+      </section>
+
+      <section class="view results-view shell" data-view="results" aria-labelledby="results-title" hidden>
+        <header class="results-hero">
+          <p class="eyebrow">Your decision-making profile</p>
+          <h1 id="results-title" data-result-title tabindex="-1">Your primary style is Conceptual.</h1>
+          <p class="results-lede" data-result-lede></p>
+          <div class="results-actions">
+            <button class="button button-primary" type="button" data-action="print">Print or save PDF</button>
+            <button class="button button-secondary" type="button" data-action="copy">Copy summary</button>
+          </div>
+          <p class="copy-status" role="status" aria-live="polite" data-copy-status></p>
+        </header>
+
+        <div class="results-layout">
+          <section class="score-panel panel" aria-labelledby="score-title">
+            <div class="panel-heading">
+              <p class="eyebrow">Your scores</p>
+              <h2 id="score-title">Preference pattern</h2>
+            </div>
+            <div class="score-list" data-score-list></div>
+            <p class="score-note">
+              Each style can score from 20 to 160 points. All four scores total 300.
+            </p>
+          </section>
+
+          <section class="profile-panel panel" aria-labelledby="profile-title">
+            <div class="panel-heading">
+              <p class="eyebrow" data-profile-label>Primary style</p>
+              <h2 id="profile-title" data-profile-name>Conceptual</h2>
+            </div>
+            <p class="profile-tagline" data-profile-tagline></p>
+            <p data-profile-description></p>
+
+            <div class="profile-columns">
+              <div>
+                <h3>What you contribute</h3>
+                <ul data-strength-list></ul>
+              </div>
+              <div>
+                <h3>What to watch</h3>
+                <ul data-watchout-list></ul>
+              </div>
+            </div>
+
+            <div class="profile-callout">
+              <span>Your next stretch question</span>
+              <p data-stretch-question></p>
+            </div>
+          </section>
+        </div>
+
+        <section class="blend-panel panel" aria-labelledby="blend-title">
+          <div class="blend-copy">
+            <p class="eyebrow">How your top styles work together</p>
+            <h2 id="blend-title" data-blend-title></h2>
+            <p data-blend-description></p>
+          </div>
+          <div class="counterweight-card">
+            <span>Useful counterweight</span>
+            <strong data-counterweight-name></strong>
+            <p data-counterweight-copy></p>
+          </div>
+        </section>
+
+        <section class="team-section" aria-labelledby="team-title">
+          <div class="section-heading">
+            <p class="eyebrow">Turn insight into practice</p>
+            <h2 id="team-title">Three questions for your next creative review</h2>
+          </div>
+          <ol class="discussion-grid">
+            <li>
+              <span>01</span>
+              <p>Which style is currently driving this decision, and what advantage does that give us?</p>
+            </li>
+            <li>
+              <span>02</span>
+              <p>Which style is least represented in the conversation, and what might it notice?</p>
+            </li>
+            <li>
+              <span>03</span>
+              <p>What would change if we separated idea generation, evidence review, alignment, and final choice?</p>
+            </li>
+          </ol>
+        </section>
+
+        <section class="all-styles-section" aria-labelledby="all-styles-title">
+          <div class="section-heading">
+            <p class="eyebrow">Team field guide</p>
+            <h2 id="all-styles-title">What every style needs to do its best work</h2>
+          </div>
+          <div class="style-guide-grid" data-style-guide></div>
+        </section>
+
+        <div class="restart-row">
+          <button class="text-button danger-text" type="button" data-action="restart">
+            Clear my responses and start again
+          </button>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="shell footer-grid">
+        <div>
+          <a class="brand footer-brand" href="#intro" data-action="show-intro" aria-label="DMSI home">
+            <span class="brand-mark" aria-hidden="true">
+              <span></span><span></span><span></span><span></span>
+            </span>
+            <span class="brand-copy"><strong>DMSI</strong></span>
+          </a>
+          <p>A practical tool for classroom reflection and better creative-team conversations.</p>
+        </div>
+        <div>
+          <h2>Learn more</h2>
+          <ul>
+            <li>
+              <a href="https://www.marketingsciencelab.org/p/improve-creative-team-performance-decision-making">
+                Read the Marketing Science Lab guide
+              </a>
+            </li>
+            <li>
+              <a href="https://slides.marketingsciencelab.org/the-4-decision-making-styles-every-team-needs">
+                View the interactive presentation
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div>
+          <h2>Source and use</h2>
+          <p>
+            Based on the framework described by Rowe, A. J., and Mason, R. O. (1987),
+            <cite>Managing with Style</cite>. This self-reflection tool is educational and is not
+            a psychological diagnosis or a substitute for a validated selection instrument.
+          </p>
+        </div>
+      </div>
+      <div class="shell footer-bottom">
+        <span>Responses remain in your browser.</span>
+        <a href="https://github.com/mralexgarrido/dmsi">View the source on GitHub</a>
+      </div>
+    </footer>
+
+    <noscript>
+      <div class="noscript-message">
+        This interactive assessment requires JavaScript. Enable JavaScript to rank the prompts and calculate your profile.
+      </div>
+    </noscript>
+  </body>
+</html>

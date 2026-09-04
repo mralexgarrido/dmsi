@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title description">
+  <title id="title">Decision-Making Style Inventory</title>
+  <desc id="description">A dark charcoal card with a red-orange four-quadrant graphic and the names of the four decision-making styles.</desc>
+  <defs>
+    <radialGradient id="glow" cx="0.85" cy="0.12" r="0.7">
+      <stop offset="0" stop-color="#ff6a45" stop-opacity="0.28"/>
+      <stop offset="1" stop-color="#ff6a45" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="630" fill="#121416"/>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+  <rect x="64" y="58" width="1072" height="514" rx="36" fill="#1e2226" stroke="#474c51"/>
+
+  <g transform="translate(96 91)">
+    <g transform="rotate(45 22 22)">
+      <rect width="19" height="19" rx="3" fill="#ff6a45"/>
+      <rect x="25" width="19" height="19" rx="3" fill="#343a40"/>
+      <rect y="25" width="19" height="19" rx="3" fill="#343a40"/>
+      <rect x="25" y="25" width="19" height="19" rx="3" fill="#ff6a45"/>
+    </g>
+    <text x="72" y="31" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="25" font-weight="700" letter-spacing="5">DMSI</text>
+  </g>
+
+  <text x="96" y="252" fill="#ff9b82" font-family="Inter, Arial, sans-serif" font-size="22" font-weight="700" letter-spacing="4">CLASSROOM-READY SELF-REFLECTION</text>
+  <text x="96" y="326" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="55" font-weight="750">How do you make</text>
+  <text x="96" y="392" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="55" font-weight="750">decisions?</text>
+  <text x="96" y="470" fill="#bbb9b5" font-family="Inter, Arial, sans-serif" font-size="25">Directive  ·  Analytical  ·  Conceptual  ·  Behavioral</text>
+
+  <g transform="translate(852 188)">
+    <rect width="110" height="110" rx="17" fill="#ff6a45"/>
+    <rect x="126" width="110" height="110" rx="17" fill="#2b3035" stroke="#4f555a"/>
+    <rect y="126" width="110" height="110" rx="17" fill="#2b3035" stroke="#4f555a"/>
+    <rect x="126" y="126" width="110" height="110" rx="17" fill="#ff6a45"/>
+  </g>
+</svg>
