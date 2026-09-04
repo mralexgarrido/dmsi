@@ -25,6 +25,8 @@ test("exports all scores and every ranked response in a readable text report", (
 
   assert.match(report, /Generated: September 4, 2026/);
   assert.match(report, /RANKED RESPONSES/);
+  assert.match(report, /\(Behavioral, 1 point\)/);
+  assert.doesNotMatch(report, /\b1 points\b/);
   assert.equal((report.match(/\n   [1-4]\. /g) ?? []).length, questions.length * 4);
 
   questions.forEach((question, index) => {
