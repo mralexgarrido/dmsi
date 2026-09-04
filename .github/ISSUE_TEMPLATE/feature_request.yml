@@ -1,0 +1,44 @@
+name: Feature request
+description: Propose a focused improvement to the educational experience.
+title: "[Feature]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Explain the teaching or participant need before describing an implementation. DMSI prioritizes privacy, accessibility, clarity, and a dependency-free static architecture.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or teaching need
+      description: What is difficult today, and who experiences that problem?
+    validations:
+      required: true
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Desired outcome
+      description: Describe what a successful experience would allow someone to do.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed approach
+      description: Share an implementation idea if you have one.
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Note existing workarounds or simpler options.
+  - type: checkboxes
+    id: principles
+    attributes:
+      label: Project principles
+      options:
+        - label: The proposal can preserve local-only assessment data.
+          required: true
+        - label: The proposal can be made keyboard and screen-reader accessible.
+          required: true
+        - label: The proposal fits an educational self-reflection tool rather than a diagnostic or selection instrument.
+          required: true
+

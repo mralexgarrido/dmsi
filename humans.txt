@@ -1,0 +1,18 @@
+/* PROJECT */
+Name: Decision-Making Style Inventory
+Short name: DMSI
+Purpose: Classroom reflection and creative-team discussion
+Creator: Alex Garrido
+Source: https://github.com/mralexgarrido/dmsi
+
+/* TECHNOLOGY */
+Standards: HTML, CSS, JavaScript, JSON-LD, Web App Manifest
+Architecture: Dependency-free static site
+Hosting: GitHub Pages
+Last update: 2026-09-04
+
+/* VALUES */
+Privacy: Responses stay in the participant's browser by default
+Accessibility: Keyboard-first interaction with semantic controls
+Licensing: MIT for original software and interface assets
+

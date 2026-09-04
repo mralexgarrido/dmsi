@@ -3,29 +3,99 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="application-name" content="DMSI">
+    <meta name="author" content="Alex Garrido">
+    <meta name="color-scheme" content="dark light">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta
+      name="robots"
+      content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
+    >
     <meta name="theme-color" content="#121416" data-theme-color>
     <meta
       name="description"
-      content="A private, classroom-ready Decision-Making Style Inventory for exploring directive, analytical, conceptual, and behavioral preferences."
+      content="Take a free, private Decision-Making Style Inventory for students and creative teams. Explore Directive, Analytical, Conceptual, and Behavioral preferences."
     >
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'none'; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'"
+      content="default-src 'self'; script-src 'self' 'sha256-N6/rtQhl+t+vmKmZLpuo6clsnlbAYJIifaKT3qgxOXE='; style-src 'self'; img-src 'self' data:; connect-src 'none'; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'"
     >
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Decision-Making Style Inventory">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:site_name" content="DMSI">
+    <meta property="og:title" content="Decision-Making Style Inventory | Free Classroom Tool">
     <meta
       property="og:description"
-      content="Discover how you tend to make decisions and what your style contributes to a creative team."
+      content="Discover how you tend to make decisions and what your preferences contribute to a creative team. Free, private, and classroom-ready."
     >
     <meta property="og:url" content="https://mralexgarrido.github.io/dmsi/">
-    <meta property="og:image" content="https://mralexgarrido.github.io/dmsi/assets/social-card.svg">
+    <meta property="og:image" content="https://mralexgarrido.github.io/dmsi/assets/social-card.png">
+    <meta property="og:image:secure_url" content="https://mralexgarrido.github.io/dmsi/assets/social-card.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta
+      property="og:image:alt"
+      content="DMSI Decision-Making Style Inventory with Directive, Analytical, Conceptual, and Behavioral styles."
+    >
     <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Decision-Making Style Inventory | Free Classroom Tool">
+    <meta
+      name="twitter:description"
+      content="Explore the decision-making preferences you bring to creative work with a free, private, classroom-ready assessment."
+    >
+    <meta name="twitter:image" content="https://mralexgarrido.github.io/dmsi/assets/social-card.png">
+    <meta
+      name="twitter:image:alt"
+      content="DMSI Decision-Making Style Inventory with Directive, Analytical, Conceptual, and Behavioral styles."
+    >
     <link rel="canonical" href="https://mralexgarrido.github.io/dmsi/">
+    <link rel="license" href="https://github.com/mralexgarrido/dmsi/blob/main/LICENSE">
+    <link rel="sitemap" type="application/xml" href="sitemap.xml">
     <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
+    <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" sizes="180x180">
+    <link rel="manifest" href="site.webmanifest">
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "@id": "https://mralexgarrido.github.io/dmsi/#application",
+        "name": "Decision-Making Style Inventory",
+        "alternateName": "DMSI",
+        "url": "https://mralexgarrido.github.io/dmsi/",
+        "description": "A free, private, classroom-ready web application for exploring Directive, Analytical, Conceptual, and Behavioral decision-making preferences.",
+        "applicationCategory": "EducationalApplication",
+        "operatingSystem": "Any",
+        "browserRequirements": "Requires JavaScript and a modern web browser.",
+        "softwareVersion": "2.1.0",
+        "inLanguage": "en",
+        "isAccessibleForFree": true,
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "author": {
+          "@type": "Person",
+          "name": "Alex Garrido",
+          "url": "https://github.com/mralexgarrido"
+        },
+        "image": "https://mralexgarrido.github.io/dmsi/assets/social-card.png",
+        "featureList": [
+          "20-question forced-ranking assessment",
+          "Local-only progress saving",
+          "Light and dark themes",
+          "Plain-text results export",
+          "Classroom-ready print layout"
+        ],
+        "educationalUse": "Self-reflection and creative-team discussion",
+        "license": "https://github.com/mralexgarrido/dmsi/blob/main/LICENSE"
+      }
+    </script>
     <script src="js/theme-init.js"></script>
     <link rel="stylesheet" href="css/styles.css">
-    <title>Decision-Making Style Inventory | DMSI</title>
+    <title>Decision-Making Style Inventory for Creative Teams | DMSI</title>
     <script type="module" src="js/app.js"></script>
   </head>
 
@@ -192,22 +262,41 @@
             </p>
           </div>
 
-          <div class="rank-legend" aria-label="Ranking scale">
-            <span><strong>1st</strong> Most like me, 8 points</span>
-            <span><strong>2nd</strong> 4 points</span>
-            <span><strong>3rd</strong> 2 points</span>
-            <span><strong>4th</strong> Least like me, 1 point</span>
+          <div class="rank-legend" aria-label="Ranking scale and color key">
+            <span class="rank-key" data-rank="1">
+              <span class="rank-key-icon" aria-hidden="true">★</span>
+              <span><strong>1st</strong> Most like me, 8 points</span>
+            </span>
+            <span class="rank-key" data-rank="2">
+              <span class="rank-key-icon" aria-hidden="true">◆</span>
+              <span><strong>2nd</strong> Second, 4 points</span>
+            </span>
+            <span class="rank-key" data-rank="3">
+              <span class="rank-key-icon" aria-hidden="true">●</span>
+              <span><strong>3rd</strong> Third, 2 points</span>
+            </span>
+            <span class="rank-key" data-rank="4">
+              <span class="rank-key-icon" aria-hidden="true">▼</span>
+              <span><strong>4th</strong> Least like me, 1 point</span>
+            </span>
           </div>
 
           <div
             class="option-list"
             data-options
             role="group"
-            aria-describedby="rank-instruction"
+            aria-describedby="rank-instruction selection-status"
           ></div>
 
-          <p class="selection-status" role="status" aria-live="polite" data-selection-status>
-            Select the statement that is most like you.
+          <p
+            class="selection-status"
+            id="selection-status"
+            role="status"
+            aria-live="polite"
+            data-selection-status
+            data-next-rank="1"
+          >
+            Choose your top choice. Select the statement that is most like you.
           </p>
 
           <div class="question-tools">
@@ -369,8 +458,12 @@
         </div>
       </div>
       <div class="shell footer-bottom">
-        <span>Responses remain in your browser.</span>
-        <a href="https://github.com/mralexgarrido/dmsi">View the source on GitHub</a>
+        <span>Free and open source. Responses remain in your browser.</span>
+        <span class="footer-bottom-links">
+          Created by <a href="https://github.com/mralexgarrido">Alex Garrido</a>.
+          <a href="https://github.com/mralexgarrido/dmsi/blob/main/LICENSE">MIT License</a>.
+          <a href="https://github.com/mralexgarrido/dmsi">View source</a>.
+        </span>
       </div>
     </footer>
 

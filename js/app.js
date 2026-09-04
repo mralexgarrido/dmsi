@@ -22,10 +22,34 @@ const STORAGE_KEY = "dmsi-assessment-v2";
 const THEME_STORAGE_KEY = "dmsi-theme";
 const STATE_VERSION = 2;
 const RANK_LABELS = [
-  { short: "1st", phrase: "most like you", badge: "Most like me" },
-  { short: "2nd", phrase: "second most like you", badge: "Second" },
-  { short: "3rd", phrase: "third most like you", badge: "Third" },
-  { short: "4th", phrase: "least like you", badge: "Least like me" },
+  {
+    short: "1st",
+    phrase: "most like you",
+    badge: "Most like me",
+    icon: "★",
+    prompt: "Choose your top choice. Select the statement that is most like you.",
+  },
+  {
+    short: "2nd",
+    phrase: "second most like you",
+    badge: "Second choice",
+    icon: "◆",
+    prompt: "Choose your second choice. Select the statement that is next most like you.",
+  },
+  {
+    short: "3rd",
+    phrase: "third most like you",
+    badge: "Third choice",
+    icon: "●",
+    prompt: "Choose your third choice. Select the next closest statement.",
+  },
+  {
+    short: "4th",
+    phrase: "least like you",
+    badge: "Least like me",
+    icon: "▼",
+    prompt: "Make your final choice. Select the statement that is least like you.",
+  },
 ];
 
 const elements = {
@@ -320,10 +344,11 @@ function showView(viewName, { updateHistory = true, focus = true } = {}) {
   }
 }
 
-function renderQuestion({ focusOptionIndex = null, focusTitle = false } = {}) {
+function renderQuestion({ focusOptionIndex = null, focusTitle = false, animateOptionIndex = null } = {}) {
   const question = questions[state.currentQuestion];
   const response = state.responses[state.currentQuestion];
   const completeCount = countCompletedQuestions();
+  const nextRankIndex = Math.min(response.length, RANK_LABELS.length - 1);
 
   elements.questionCounter.textContent = `Question ${state.currentQuestion + 1} of ${questions.length}`;
   elements.completionCounter.textContent = `${completeCount} complete`;
@@ -343,12 +368,16 @@ function renderQuestion({ focusOptionIndex = null, focusTitle = false } = {}) {
 
     if (isRanked) {
       button.dataset.rank = String(rankIndex + 1);
+      if (optionIndex === animateOptionIndex) {
+        button.classList.add("is-new-rank");
+      }
       button.setAttribute(
         "aria-label",
         `${optionText}. Ranked ${RANK_LABELS[rankIndex].phrase}, ${RANK_SCORES[rankIndex]} points. Select to remove this ranking.`,
       );
     } else {
-      const nextRankIndex = Math.min(response.length, RANK_LABELS.length - 1);
+      button.dataset.nextRank = String(nextRankIndex + 1);
+      button.classList.add("is-current-choice");
       button.setAttribute(
         "aria-label",
         `${optionText}. Select as ${RANK_LABELS[nextRankIndex].phrase}, ${RANK_SCORES[nextRankIndex]} points.`,
@@ -363,20 +392,29 @@ function renderQuestion({ focusOptionIndex = null, focusTitle = false } = {}) {
     badge.className = "rank-badge";
     badge.setAttribute("aria-hidden", "true");
 
+    const displayedRankIndex = isRanked ? rankIndex : nextRankIndex;
+    const badgeIcon = document.createElement("span");
+    badgeIcon.className = "rank-badge-icon";
+    badgeIcon.textContent = RANK_LABELS[displayedRankIndex].icon;
+
+    const badgeCopy = document.createElement("span");
+    badgeCopy.className = "rank-badge-copy";
+
     if (isRanked) {
       const badgeLabel = document.createElement("span");
       badgeLabel.textContent = `${RANK_LABELS[rankIndex].short} · ${RANK_LABELS[rankIndex].badge}`;
       const badgeScore = document.createElement("strong");
       badgeScore.textContent = `${RANK_SCORES[rankIndex]} pts`;
-      badge.append(badgeLabel, badgeScore);
+      badgeCopy.append(badgeLabel, badgeScore);
     } else {
       const badgeLabel = document.createElement("span");
-      badgeLabel.textContent = "Select";
+      badgeLabel.textContent = `Choose ${RANK_LABELS[nextRankIndex].short}`;
       const badgeScore = document.createElement("strong");
-      badgeScore.textContent = `${RANK_SCORES[Math.min(response.length, 3)]} pts`;
-      badge.append(badgeLabel, badgeScore);
+      badgeScore.textContent = `${RANK_SCORES[nextRankIndex]} pts`;
+      badgeCopy.append(badgeLabel, badgeScore);
     }
 
+    badge.append(badgeIcon, badgeCopy);
     button.append(copy, badge);
     button.addEventListener("click", () => selectOption(optionIndex));
     elements.options.append(button);
@@ -386,9 +424,11 @@ function renderQuestion({ focusOptionIndex = null, focusTitle = false } = {}) {
   if (isComplete) {
     elements.selectionStatus.textContent = "Ranking complete. Continue when you are ready.";
     elements.selectionStatus.classList.add("is-complete");
+    delete elements.selectionStatus.dataset.nextRank;
   } else {
-    elements.selectionStatus.textContent = `Select the statement that is ${RANK_LABELS[response.length].phrase}.`;
+    elements.selectionStatus.textContent = RANK_LABELS[response.length].prompt;
     elements.selectionStatus.classList.remove("is-complete");
+    elements.selectionStatus.dataset.nextRank = String(response.length + 1);
   }
 
   elements.undoButton.disabled = response.length === 0;
@@ -415,16 +455,18 @@ function renderQuestion({ focusOptionIndex = null, focusTitle = false } = {}) {
 function selectOption(optionIndex) {
   const response = state.responses[state.currentQuestion];
   const existingRankIndex = response.indexOf(optionIndex);
+  let animateOptionIndex = null;
 
   if (existingRankIndex !== -1) {
     response.splice(existingRankIndex, 1);
   } else if (response.length < STYLE_KEYS.length) {
     response.push(optionIndex);
+    animateOptionIndex = optionIndex;
   }
 
   state.completed = false;
   saveState();
-  renderQuestion({ focusOptionIndex: optionIndex });
+  renderQuestion({ focusOptionIndex: optionIndex, animateOptionIndex });
 }
 
 function undoLastSelection() {

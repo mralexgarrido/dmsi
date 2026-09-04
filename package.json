@@ -1,9 +1,26 @@
 {
   "name": "decision-making-style-inventory",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "private": true,
   "type": "module",
-  "description": "A private, classroom-ready Decision-Making Style Inventory for creative teams.",
+  "description": "A free, private, classroom-ready Decision-Making Style Inventory for students and creative teams.",
+  "author": "Alex Garrido",
+  "license": "MIT",
+  "homepage": "https://mralexgarrido.github.io/dmsi/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mralexgarrido/dmsi.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mralexgarrido/dmsi/issues"
+  },
+  "keywords": [
+    "decision-making",
+    "creative-teams",
+    "education",
+    "assessment",
+    "self-reflection"
+  ],
   "scripts": {
     "build": "node scripts/build.mjs",
     "check": "node --check js/app.js && node --check js/export.js && node --check js/questions.js && node --check js/scoring.js && node --check js/theme-init.js && node --test",

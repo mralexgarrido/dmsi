@@ -17,6 +17,8 @@ test("references local runtime assets that exist", async () => {
   );
 
   assert.deepEqual(localReferences.sort(), [
+    "assets/apple-touch-icon.png",
+    "assets/favicon-32.png",
     "assets/favicon.svg",
     "css/styles.css",
     "js/app.js",
@@ -52,8 +54,30 @@ test("declares restrictive browser and privacy defaults", async () => {
   assert.match(html, /Content-Security-Policy/i);
   assert.match(html, /connect-src 'none'/i);
   assert.match(html, /form-action 'none'/i);
+  assert.match(html, /name="robots"[\s\S]+index, follow/i);
   assert.match(html, /<link rel="canonical" href="https:\/\/mralexgarrido\.github\.io\/dmsi\/">/i);
   assert.match(html, /Responses remain in your browser\./i);
+});
+
+test("exposes redundant, reduced-motion-safe ranking cues", async () => {
+  const [html, script, styles] = await Promise.all([
+    readProjectFile("index.html"),
+    readProjectFile("js/app.js"),
+    readProjectFile("css/styles.css"),
+  ]);
+
+  for (const rank of ["1", "2", "3", "4"]) {
+    assert.match(html, new RegExp(`class="rank-key" data-rank="${rank}"`));
+    assert.match(styles, new RegExp(`option-button\\[data-rank="${rank}"\\]`));
+    assert.match(styles, new RegExp(`option-button\\[data-next-rank="${rank}"\\]`));
+  }
+
+  assert.match(html, /★[\s\S]+Most like me, 8 points/);
+  assert.match(html, /▼[\s\S]+Least like me, 1 point/);
+  assert.match(script, /button\.classList\.add\("is-new-rank"\)/);
+  assert.match(script, /elements\.selectionStatus\.dataset\.nextRank/);
+  assert.match(styles, /@keyframes star-pop/);
+  assert.match(styles, /prefers-reduced-motion:[\s\S]+animation-duration: 0\.01ms !important/);
 });
 
 test("preserves the original article link with a root redirect", async () => {

@@ -1,0 +1,26 @@
+# Decision-Making Style Inventory (DMSI)
+
+> DMSI is a free, private, classroom-ready web application for exploring Directive, Analytical, Conceptual, and Behavioral decision-making preferences.
+
+## Primary resources
+
+- [Live assessment](https://mralexgarrido.github.io/dmsi/): Complete the 20-prompt forced-ranking reflection and review a practical profile.
+- [Source repository](https://github.com/mralexgarrido/dmsi): Application source, tests, license, attribution, and contributor documentation.
+- [Scoring and interpretation](https://github.com/mralexgarrido/dmsi/blob/main/docs/SCORING.md): Auditable response mapping, point model, invariants, ties, and interpretation boundaries.
+- [Privacy and data handling](https://github.com/mralexgarrido/dmsi/blob/main/docs/PRIVACY.md): Local storage, network behavior, exports, and participant control.
+- [Accessibility](https://github.com/mralexgarrido/dmsi/blob/main/docs/ACCESSIBILITY.md): Current provisions, testing expectations, and limitations.
+- [Teaching context](https://www.marketingsciencelab.org/p/improve-creative-team-performance-decision-making): Applied explanation of the four styles in marketing and creative-team work.
+
+## Key facts
+
+- Participants rank four responses across 20 prompts.
+- Ranks award 8, 4, 2, and 1 points. The four style scores total 300.
+- Equal leading scores are explicitly presented as shared preferences.
+- Assessment responses stay in the participant's browser unless explicitly copied, downloaded, or printed.
+- DMSI is an educational self-reflection tool, not a diagnosis or validated basis for high-stakes decisions.
+- The original software and interface assets are available under the MIT License. Third-party source material is governed separately as described in NOTICE.md.
+
+## Citation
+
+Repository citation metadata is available in [CITATION.cff](https://github.com/mralexgarrido/dmsi/blob/main/CITATION.cff).
+
