@@ -75,7 +75,7 @@ test("publishes truthful WebApplication structured data allowed by the CSP", asy
   assert.equal(data.url, canonicalUrl);
   assert.equal(data.applicationCategory, "EducationalApplication");
   assert.equal(data.operatingSystem, "Any");
-  assert.equal(data.softwareVersion, "2.1.0");
+  assert.equal(data.softwareVersion, "2.2.0");
   assert.equal(data.isAccessibleForFree, true);
   assert.equal(data.offers.price, "0");
   assert.equal(data.author.name, "Alex Garrido");
@@ -129,4 +129,3 @@ test("publishes machine-readable security and project context", async () => {
   assert.match(llmsText, /DMSI is an educational self-reflection tool/);
   assert.match(humansText, /Creator: Alex Garrido/);
 });
-

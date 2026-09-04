@@ -60,7 +60,7 @@ test("keeps repository, citation, package, and structured-data versions aligned"
   const packageData = JSON.parse(packageText);
   const citationVersion = citation.match(/^version: ([^\s]+)$/m)?.[1];
 
-  assert.equal(packageData.version, "2.1.0");
+  assert.equal(packageData.version, "2.2.0");
   assert.equal(citationVersion, packageData.version);
   assert.match(html, new RegExp(`"softwareVersion": "${packageData.version}"`));
   assert.match(changelog, new RegExp(`## ${packageData.version} - 2026-09-04`));

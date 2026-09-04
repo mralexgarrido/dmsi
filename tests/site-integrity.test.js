@@ -60,22 +60,28 @@ test("declares restrictive browser and privacy defaults", async () => {
 });
 
 test("exposes redundant, reduced-motion-safe ranking cues", async () => {
-  const [html, script, styles] = await Promise.all([
+  const [html, script, rankProgress, styles] = await Promise.all([
     readProjectFile("index.html"),
     readProjectFile("js/app.js"),
+    readProjectFile("js/rank-progress.js"),
     readProjectFile("css/styles.css"),
   ]);
 
   for (const rank of ["1", "2", "3", "4"]) {
-    assert.match(html, new RegExp(`class="rank-key" data-rank="${rank}"`));
+    assert.match(html, new RegExp(`data-rank-step="${rank}"`));
     assert.match(styles, new RegExp(`option-button\\[data-rank="${rank}"\\]`));
     assert.match(styles, new RegExp(`option-button\\[data-next-rank="${rank}"\\]`));
   }
 
-  assert.match(html, /★[\s\S]+Most like me, 8 points/);
-  assert.match(html, /▼[\s\S]+Least like me, 1 point/);
+  assert.match(html, /data-rank-current>Choose now: Most like me/);
+  assert.match(html, /data-rank-remaining>4 choices remaining/);
+  assert.match(html, /★[\s\S]+Most like me<\/strong><small>8 points/);
+  assert.match(html, /▼[\s\S]+Least like me<\/strong><small>1 point/);
+  assert.match(html, /class="selection-status visually-hidden"/);
+  assert.match(script, /function renderRankProgress\(progress\)/);
   assert.match(script, /button\.classList\.add\("is-new-rank"\)/);
-  assert.match(script, /elements\.selectionStatus\.dataset\.nextRank/);
+  assert.doesNotMatch(script, /is-current-choice/);
+  assert.match(rankProgress, /remainingLabel:/);
   assert.match(styles, /@keyframes star-pop/);
   assert.match(styles, /prefers-reduced-motion:[\s\S]+animation-duration: 0\.01ms !important/);
 });

@@ -12,7 +12,7 @@ The application is intentionally dependency-free. It runs as a static site on Gi
 
 | Project status | Details |
 |---|---|
-| Current version | 2.1.0 |
+| Current version | 2.2.0 |
 | Release status | Maintained and deployed from `main` |
 | Architecture | Dependency-free HTML, CSS, and JavaScript |
 | Data model | Local-only by default. No account or backend |
@@ -22,8 +22,8 @@ The application is intentionally dependency-free. It runs as a static site on Gi
 
 - A guided, one-question-at-a-time assessment that works well on phones and desktops
 - Automatic forced ranking with the original 8, 4, 2, and 1 scoring pattern
-- Clear progress, undo, back navigation, and local progress saving
-- A color-, icon-, label-, and point-coded ranking flow with a reduced-motion-safe star confirmation for the top choice
+- Clear question progress, a live ranking gauge, undo, back navigation, and local progress saving
+- A green-to-red, icon- and label-coded ranking flow with a reduced-motion-safe star confirmation for the top choice
 - Light and dark themes with a remembered device preference and system-aware first visit
 - A practical results dashboard with strengths, watch-outs, a stretch question, and a useful counterweight
 - Two-style interpretation designed for creative-team discussion
@@ -40,8 +40,8 @@ Each of the 20 prompts presents four responses. A participant ranks all four res
 | Rank | Score |
 |---|---:|
 | Most like me | 8 |
-| Second most like me | 4 |
-| Third most like me | 2 |
+| More like me | 4 |
+| Less like me | 2 |
 | Least like me | 1 |
 
 The four response positions map consistently to Directive, Analytical, Conceptual, and Behavioral. Each style can score from 20 to 160 points. The four style scores always total 300. The highest score is presented as the primary preference. Equal high scores are reported as a blended profile rather than resolved with an arbitrary tie-breaker.
@@ -54,6 +54,7 @@ The four response positions map consistently to Directive, Analytical, Conceptua
 | `css/styles.css` | Responsive design system, components, accessibility states, and print layout |
 | `js/questions.js` | Assessment prompts and interpretation content |
 | `js/scoring.js` | Pure scoring and validation functions |
+| `js/rank-progress.js` | Pure rank labels and remaining-choice state |
 | `js/export.js` | Pure text-summary and full-report generation functions |
 | `js/app.js` | Assessment state, rendering, navigation, persistence, and result actions |
 | `js/theme-init.js` | Applies the saved or system theme before the interface renders |
@@ -134,7 +135,7 @@ Release history is maintained in [CHANGELOG.md](CHANGELOG.md). GitHub Actions up
 
 GitHub can generate APA and BibTeX citations from the repository's [CITATION.cff](CITATION.cff) file. A general software citation is:
 
-Garrido, A. (2026). *Decision-Making Style Inventory* (Version 2.1.0) [Computer software]. https://mralexgarrido.github.io/dmsi/
+Garrido, A. (2026). *Decision-Making Style Inventory* (Version 2.2.0) [Computer software]. https://mralexgarrido.github.io/dmsi/
 
 ## License and content notice
 
