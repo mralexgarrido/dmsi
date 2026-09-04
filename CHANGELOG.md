@@ -2,6 +2,21 @@
 
 All notable changes to DMSI are documented in this file. The project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html) for its maintained static application.
 
+## 2.2.0 - 2026-09-04
+
+### Added
+
+- A live four-step ranking gauge that shows the current rank and choices remaining
+- Automated tests for every ranking-progress state
+
+### Changed
+
+- Reframed the ranking language as Most, More, Less, and Least like me
+- Changed the ranking palette to green, light green, yellow-orange, and red
+- Made rank language primary and point values secondary inside answer cards
+- Kept unselected answers visually neutral until hover or selection
+- Moved repeated ranking instructions into an assistive-technology live region
+
 ## 2.1.0 - 2026-09-04
 
 ### Added

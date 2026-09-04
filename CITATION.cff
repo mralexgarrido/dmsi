@@ -5,7 +5,7 @@ type: software
 authors:
   - family-names: Garrido
     given-names: Alex
-version: 2.1.0
+version: 2.2.0
 date-released: 2026-09-04
 url: "https://mralexgarrido.github.io/dmsi/"
 repository-code: "https://github.com/mralexgarrido/dmsi"
@@ -18,4 +18,3 @@ keywords:
   - creative teams
   - education
   - self reflection
-

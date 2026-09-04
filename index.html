@@ -18,7 +18,7 @@
     >
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'self' 'sha256-N6/rtQhl+t+vmKmZLpuo6clsnlbAYJIifaKT3qgxOXE='; style-src 'self'; img-src 'self' data:; connect-src 'none'; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'"
+      content="default-src 'self'; script-src 'self' 'sha256-DbAx5xfCov681xfBK7fql9p8BPlYqflawbQR3g0HqZU='; style-src 'self'; img-src 'self' data:; connect-src 'none'; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'"
     >
     <meta property="og:type" content="website">
     <meta property="og:locale" content="en_US">
@@ -68,7 +68,7 @@
         "applicationCategory": "EducationalApplication",
         "operatingSystem": "Any",
         "browserRequirements": "Requires JavaScript and a modern web browser.",
-        "softwareVersion": "2.1.0",
+        "softwareVersion": "2.2.0",
         "inLanguage": "en",
         "isAccessibleForFree": true,
         "offers": {
@@ -258,28 +258,73 @@
             <p class="eyebrow">Your usual work behavior</p>
             <h1 id="question-title" data-question-title tabindex="-1">My prime objective is to:</h1>
             <p id="rank-instruction" class="question-instruction">
-              Select each statement in order, from most like you to least like you.
+              Choose one statement for each rank, from Most like me to Least like me.
             </p>
           </div>
 
-          <div class="rank-legend" aria-label="Ranking scale and color key">
-            <span class="rank-key" data-rank="1">
-              <span class="rank-key-icon" aria-hidden="true">★</span>
-              <span><strong>1st</strong> Most like me, 8 points</span>
-            </span>
-            <span class="rank-key" data-rank="2">
-              <span class="rank-key-icon" aria-hidden="true">◆</span>
-              <span><strong>2nd</strong> Second, 4 points</span>
-            </span>
-            <span class="rank-key" data-rank="3">
-              <span class="rank-key-icon" aria-hidden="true">●</span>
-              <span><strong>3rd</strong> Third, 2 points</span>
-            </span>
-            <span class="rank-key" data-rank="4">
-              <span class="rank-key-icon" aria-hidden="true">▼</span>
-              <span><strong>4th</strong> Least like me, 1 point</span>
-            </span>
-          </div>
+          <section
+            class="rank-progress"
+            data-rank-progress
+            data-current-rank="1"
+            data-state="ranking"
+            aria-labelledby="rank-progress-title"
+          >
+            <div class="rank-progress-heading">
+              <div>
+                <p class="rank-progress-kicker" id="rank-progress-title">Ranking progress</p>
+                <p class="rank-current" data-rank-current>Choose now: Most like me</p>
+              </div>
+              <span class="rank-remaining" data-rank-remaining>4 choices remaining</span>
+            </div>
+
+            <ol class="rank-meter" aria-label="Four ranking steps">
+              <li
+                class="rank-step"
+                data-rank-step="1"
+                data-rank="1"
+                data-state="current"
+                aria-current="step"
+                aria-label="1st choice: Most like me, 8 points, now."
+              >
+                <span class="rank-step-icon" aria-hidden="true">★</span>
+                <span class="rank-step-copy"><strong>Most like me</strong><small>8 points</small></span>
+                <span class="rank-step-state" data-rank-step-state aria-hidden="true">Now</span>
+              </li>
+              <li
+                class="rank-step"
+                data-rank-step="2"
+                data-rank="2"
+                data-state="upcoming"
+                aria-label="2nd choice: More like me, 4 points, next."
+              >
+                <span class="rank-step-icon" aria-hidden="true">◆</span>
+                <span class="rank-step-copy"><strong>More like me</strong><small>4 points</small></span>
+                <span class="rank-step-state" data-rank-step-state aria-hidden="true">Next</span>
+              </li>
+              <li
+                class="rank-step"
+                data-rank-step="3"
+                data-rank="3"
+                data-state="upcoming"
+                aria-label="3rd choice: Less like me, 2 points, next."
+              >
+                <span class="rank-step-icon" aria-hidden="true">●</span>
+                <span class="rank-step-copy"><strong>Less like me</strong><small>2 points</small></span>
+                <span class="rank-step-state" data-rank-step-state aria-hidden="true">Next</span>
+              </li>
+              <li
+                class="rank-step"
+                data-rank-step="4"
+                data-rank="4"
+                data-state="upcoming"
+                aria-label="4th choice: Least like me, 1 point, next."
+              >
+                <span class="rank-step-icon" aria-hidden="true">▼</span>
+                <span class="rank-step-copy"><strong>Least like me</strong><small>1 point</small></span>
+                <span class="rank-step-state" data-rank-step-state aria-hidden="true">Next</span>
+              </li>
+            </ol>
+          </section>
 
           <div
             class="option-list"
@@ -289,12 +334,11 @@
           ></div>
 
           <p
-            class="selection-status"
+            class="selection-status visually-hidden"
             id="selection-status"
             role="status"
             aria-live="polite"
             data-selection-status
-            data-next-rank="1"
           >
             Choose your top choice. Select the statement that is most like you.
           </p>
