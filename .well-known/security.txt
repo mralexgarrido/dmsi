@@ -1,0 +1,6 @@
+Contact: https://github.com/mralexgarrido/dmsi/security/advisories/new
+Expires: 2027-09-04T23:59:59Z
+Preferred-Languages: en
+Canonical: https://mralexgarrido.github.io/dmsi/.well-known/security.txt
+Policy: https://github.com/mralexgarrido/dmsi/blob/main/SECURITY.md
+

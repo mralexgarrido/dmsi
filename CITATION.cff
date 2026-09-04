@@ -1,0 +1,21 @@
+cff-version: 1.2.0
+message: "If you use DMSI in teaching or scholarship, please cite this software."
+title: "Decision-Making Style Inventory"
+type: software
+authors:
+  - family-names: Garrido
+    given-names: Alex
+version: 2.1.0
+date-released: 2026-09-04
+url: "https://mralexgarrido.github.io/dmsi/"
+repository-code: "https://github.com/mralexgarrido/dmsi"
+license: MIT
+abstract: >-
+  A private, classroom-ready web application for exploring Directive,
+  Analytical, Conceptual, and Behavioral decision-making preferences.
+keywords:
+  - decision making
+  - creative teams
+  - education
+  - self reflection
+

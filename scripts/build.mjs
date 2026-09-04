@@ -8,11 +8,14 @@ const publicFiles = [
   ".nojekyll",
   "404.html",
   "dmsiform.html",
+  "humans.txt",
   "index.html",
+  "llms.txt",
   "robots.txt",
+  "site.webmanifest",
   "sitemap.xml",
 ];
-const publicDirectories = ["assets", "css", "js"];
+const publicDirectories = [".well-known", "assets", "css", "js"];
 
 await rm(outputDirectory, { recursive: true, force: true });
 await mkdir(outputDirectory, { recursive: true });

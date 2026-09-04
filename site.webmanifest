@@ -1,0 +1,28 @@
+{
+  "name": "Decision-Making Style Inventory",
+  "short_name": "DMSI",
+  "description": "A free, private, classroom-ready reflection tool for exploring four decision-making preferences.",
+  "id": "/dmsi/",
+  "start_url": "/dmsi/#intro",
+  "scope": "/dmsi/",
+  "display": "standalone",
+  "background_color": "#121416",
+  "theme_color": "#121416",
+  "lang": "en-US",
+  "categories": ["education", "productivity"],
+  "icons": [
+    {
+      "src": "assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
+

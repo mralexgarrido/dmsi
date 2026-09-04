@@ -1,18 +1,29 @@
 # Decision-Making Style Inventory
 
-[Open the live assessment](https://mralexgarrido.github.io/dmsi/)
+[![Validate and deploy DMSI](https://github.com/mralexgarrido/dmsi/actions/workflows/deploy-pages.yml/badge.svg)](https://github.com/mralexgarrido/dmsi/actions/workflows/deploy-pages.yml)
 
-![DMSI social card](assets/social-card.svg)
+[Open the assessment](https://mralexgarrido.github.io/dmsi/) · [Scoring](docs/SCORING.md) · [Privacy](docs/PRIVACY.md) · [Accessibility](docs/ACCESSIBILITY.md) · [Contributing](CONTRIBUTING.md) · [Maintaining](docs/MAINTAINER_GUIDE.md)
+
+![DMSI social preview](assets/social-card.png)
 
 DMSI is a private, classroom-ready reflection tool for exploring four decision-making preferences: Directive, Analytical, Conceptual, and Behavioral. It is designed for students, creative teams, and facilitators who want a useful conversation about how people evaluate options and move work forward.
 
 The application is intentionally dependency-free. It runs as a static site on GitHub Pages, stores responses only in the participant's browser, and does not transmit assessment data.
+
+| Project status | Details |
+|---|---|
+| Current version | 2.1.0 |
+| Release status | Maintained and deployed from `main` |
+| Architecture | Dependency-free HTML, CSS, and JavaScript |
+| Data model | Local-only by default. No account or backend |
+| License | MIT for original software and interface assets. See [NOTICE.md](NOTICE.md) |
 
 ## What the experience includes
 
 - A guided, one-question-at-a-time assessment that works well on phones and desktops
 - Automatic forced ranking with the original 8, 4, 2, and 1 scoring pattern
 - Clear progress, undo, back navigation, and local progress saving
+- A color-, icon-, label-, and point-coded ranking flow with a reduced-motion-safe star confirmation for the top choice
 - Light and dark themes with a remembered device preference and system-aware first visit
 - A practical results dashboard with strengths, watch-outs, a stretch question, and a useful counterweight
 - Two-style interpretation designed for creative-team discussion
@@ -46,7 +57,8 @@ The four response positions map consistently to Directive, Analytical, Conceptua
 | `js/export.js` | Pure text-summary and full-report generation functions |
 | `js/app.js` | Assessment state, rendering, navigation, persistence, and result actions |
 | `js/theme-init.js` | Applies the saved or system theme before the interface renders |
-| `tests/` | Automated checks for scoring, content contracts, privacy defaults, assets, and legacy-link continuity |
+| `docs/` | Auditable scoring, privacy, accessibility, and maintainer guidance |
+| `tests/` | Automated checks for scoring, interaction cues, metadata, community health, privacy defaults, assets, and legacy-link continuity |
 | `scripts/build.mjs` | Creates the static `dist/` deployment artifact |
 | `scripts/serve.mjs` | Runs a dependency-free local development server |
 | `dmsiform.html` | Preserves the original article link and forwards it to the new root experience |
@@ -80,6 +92,12 @@ The GitHub Actions workflow follows a two-stage release path:
 
 Only the deployment job receives `pages: write` and `id-token: write`. Validation and build jobs retain read-only repository access.
 
+## Search and social discovery
+
+The production page includes a canonical URL, index directives, Open Graph and X card metadata, a 1200 by 630 PNG preview, a web app manifest, and JSON-LD describing the project as a free educational web application. `robots.txt` points crawlers to `sitemap.xml`. `llms.txt`, `humans.txt`, and `/.well-known/security.txt` provide additional machine-readable project context.
+
+Metadata, image dimensions, structured data, sitemap alignment, Content Security Policy hashes, and deployment inclusion are covered by automated tests. No `meta keywords` tag is used because modern search engines do not use it for ranking.
+
 ## Accessibility and privacy
 
 The interface uses buttons rather than drag-only ranking, so the complete assessment can be taken with a keyboard, touch screen, switch control, or screen reader. Status changes are announced through polite live regions. Content remains usable at narrow widths and with reduced motion enabled.
@@ -105,6 +123,18 @@ Rowe, A. J., & Mason, R. O. (1987). *Managing with style: A guide to understandi
 For applied context in marketing and creative work, read [Unlocking Creative Potential: The 4 Decision-Making Styles Every Marketing Team Needs](https://www.marketingsciencelab.org/p/improve-creative-team-performance-decision-making).
 
 This project is an educational self-reflection experience. It is not a psychological diagnosis, a clinical instrument, or a validated basis for hiring, grading, promotion, or other high-stakes decisions.
+
+## Contributing and project health
+
+Focused contributions are welcome. Read [CONTRIBUTING.md](CONTRIBUTING.md) before opening a pull request and use the structured issue forms for [bugs](https://github.com/mralexgarrido/dmsi/issues/new?template=bug_report.yml) or [feature proposals](https://github.com/mralexgarrido/dmsi/issues/new?template=feature_request.yml). Participation is governed by the [Code of Conduct](CODE_OF_CONDUCT.md). Security concerns must be reported privately according to [SECURITY.md](SECURITY.md).
+
+Release history is maintained in [CHANGELOG.md](CHANGELOG.md). GitHub Actions updates are monitored through Dependabot.
+
+## Cite this project
+
+GitHub can generate APA and BibTeX citations from the repository's [CITATION.cff](CITATION.cff) file. A general software citation is:
+
+Garrido, A. (2026). *Decision-Making Style Inventory* (Version 2.1.0) [Computer software]. https://mralexgarrido.github.io/dmsi/
 
 ## License and content notice
 
