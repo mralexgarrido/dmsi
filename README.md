@@ -42,7 +42,7 @@ The four response positions map consistently to Directive, Analytical, Conceptua
 | `js/questions.js` | Assessment prompts and interpretation content |
 | `js/scoring.js` | Pure scoring and validation functions |
 | `js/app.js` | Assessment state, rendering, navigation, persistence, and result actions |
-| `tests/scoring.test.js` | Automated checks for ranking validity, score mapping, totals, ties, and errors |
+| `tests/` | Automated checks for scoring, content contracts, privacy defaults, assets, and legacy-link continuity |
 | `scripts/build.mjs` | Creates the static `dist/` deployment artifact |
 | `scripts/serve.mjs` | Runs a dependency-free local development server |
 | `dmsiform.html` | Preserves the original article link and forwards it to the new root experience |
