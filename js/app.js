@@ -1,9 +1,14 @@
 import { blendProfiles, questions, styleOrder, styleProfiles } from "./questions.js";
 import {
+  buildDetailedResultsExport,
+  buildResultsSummary,
+  formatDisplayDate,
+  formatFileDate,
+} from "./export.js";
+import {
   MAX_STYLE_SCORE,
   RANK_SCORES,
   STYLE_KEYS,
-  TOTAL_ASSESSMENT_SCORE,
   calculateScores,
   getBlendKey,
   getLeadingStyleKeys,
@@ -11,10 +16,10 @@ import {
   isCompleteResponse,
   isValidAssessment,
   rankStyles,
-  sumScores,
 } from "./scoring.js";
 
 const STORAGE_KEY = "dmsi-assessment-v2";
+const THEME_STORAGE_KEY = "dmsi-theme";
 const STATE_VERSION = 2;
 const RANK_LABELS = [
   { short: "1st", phrase: "most like you", badge: "Most like me" },
@@ -25,6 +30,9 @@ const RANK_LABELS = [
 
 const elements = {
   views: [...document.querySelectorAll("[data-view]")],
+  themeToggle: document.querySelector("[data-action='toggle-theme']"),
+  themeLabel: document.querySelector("[data-theme-label]"),
+  themeColor: document.querySelector("[data-theme-color]"),
   headerAction: document.querySelector("[data-action='save-exit']"),
   startButton: document.querySelector("[data-action='start']"),
   resumeNote: document.querySelector("[data-resume-note]"),
@@ -53,16 +61,18 @@ const elements = {
   counterweightName: document.querySelector("[data-counterweight-name]"),
   counterweightCopy: document.querySelector("[data-counterweight-copy]"),
   styleGuide: document.querySelector("[data-style-guide]"),
-  copyStatus: document.querySelector("[data-copy-status]"),
+  resultActionStatus: document.querySelector("[data-result-action-status]"),
+  printDate: document.querySelector("[data-print-date]"),
 };
 
 let state = loadState();
-let copyStatusTimer;
+let resultActionStatusTimer;
 
 initialize();
 
 function initialize() {
   bindActions();
+  renderThemeControl();
   renderStyleGuide();
   renderIntroState();
 
@@ -82,6 +92,7 @@ function initialize() {
 }
 
 function bindActions() {
+  elements.themeToggle.addEventListener("click", toggleTheme);
   elements.startButton.addEventListener("click", startOrResumeAssessment);
   elements.headerAction.addEventListener("click", saveAndExit);
   elements.undoButton.addEventListener("click", undoLastSelection);
@@ -97,6 +108,7 @@ function bindActions() {
   });
 
   document.querySelector("[data-action='print']").addEventListener("click", () => window.print());
+  document.querySelector("[data-action='export']").addEventListener("click", exportDetailedResults);
   document.querySelector("[data-action='copy']").addEventListener("click", copyResultsSummary);
   document.querySelector("[data-action='restart']").addEventListener("click", restartAssessment);
 
@@ -116,6 +128,31 @@ function bindActions() {
 
     showView("intro", { updateHistory: false });
   });
+}
+
+function toggleTheme() {
+  const nextTheme = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+  document.documentElement.dataset.theme = nextTheme;
+
+  try {
+    window.localStorage.setItem(THEME_STORAGE_KEY, nextTheme);
+  } catch {
+    // The visual preference still applies for the current visit.
+  }
+
+  renderThemeControl();
+}
+
+function renderThemeControl() {
+  const currentTheme = document.documentElement.dataset.theme === "light" ? "light" : "dark";
+  const nextTheme = currentTheme === "dark" ? "light" : "dark";
+  const nextThemeLabel = `${nextTheme[0].toUpperCase()}${nextTheme.slice(1)}`;
+  const accessibleLabel = `Switch to ${nextTheme} theme`;
+
+  elements.themeLabel.textContent = nextThemeLabel;
+  elements.themeToggle.setAttribute("aria-label", accessibleLabel);
+  elements.themeToggle.title = accessibleLabel;
+  elements.themeColor.content = currentTheme === "dark" ? "#121416" : "#f5f2ed";
 }
 
 function createInitialState() {
@@ -464,6 +501,8 @@ function renderResults() {
   const secondaryKey = rankedStyles[1].key;
   const lowestKey = getLowestStyleKey(scores);
 
+  elements.printDate.textContent = `Generated ${formatDisplayDate(new Date())}`;
+
   renderResultHeading(scores, rankedStyles, leadingStyleKeys);
   renderScores(rankedStyles, leadingStyleKeys);
   renderProfile(leadingStyleKeys, primaryKey);
@@ -606,11 +645,11 @@ async function copyResultsSummary() {
     return;
   }
 
-  const summary = buildResultsSummary();
+  const summary = buildResultsSummary(state.responses);
 
   try {
     await navigator.clipboard.writeText(summary);
-    showCopyStatus("Summary copied to your clipboard.");
+    showResultActionStatus("Summary copied to your clipboard.");
   } catch {
     const temporaryTextArea = document.createElement("textarea");
     temporaryTextArea.value = summary;
@@ -621,56 +660,41 @@ async function copyResultsSummary() {
 
     const copied = document.execCommand("copy");
     temporaryTextArea.remove();
-    showCopyStatus(copied ? "Summary copied to your clipboard." : "Copy was unavailable. Use Print or save PDF instead.");
+    showResultActionStatus(
+      copied
+        ? "Summary copied to your clipboard."
+        : "Copy was unavailable. Download or print your results instead.",
+    );
   }
 }
 
-function buildResultsSummary() {
-  const scores = calculateScores(state.responses);
-  const rankedStyles = rankStyles(scores);
-  const leadingStyleKeys = getLeadingStyleKeys(scores);
-  const primaryKey = rankedStyles[0].key;
-  const secondaryKey = rankedStyles[1].key;
-  const primaryProfile = styleProfiles[primaryKey];
-  const leadingLabels = leadingStyleKeys.map((styleKey) => styleProfiles[styleKey].label);
-  const primaryLine =
-    leadingLabels.length === 1
-      ? `Primary style: ${primaryProfile.label}`
-      : `Shared primary styles: ${leadingLabels.join(" + ")}`;
+function exportDetailedResults() {
+  if (!isValidAssessment(state.responses)) {
+    return;
+  }
 
-  const scoreLines = rankedStyles.map(
-    ({ key, score }) => `- ${styleProfiles[key].label}: ${score} / ${MAX_STYLE_SCORE}`,
-  );
+  const exportDate = new Date();
+  const file = new Blob([buildDetailedResultsExport(state.responses, exportDate)], {
+    type: "text/plain;charset=utf-8",
+  });
+  const downloadUrl = URL.createObjectURL(file);
+  const downloadLink = document.createElement("a");
 
-  const blend = blendProfiles[getBlendKey(primaryKey, secondaryKey)];
+  downloadLink.href = downloadUrl;
+  downloadLink.download = `dmsi-results-${formatFileDate(exportDate)}.txt`;
+  document.body.append(downloadLink);
+  downloadLink.click();
+  downloadLink.remove();
+  window.setTimeout(() => URL.revokeObjectURL(downloadUrl), 1000);
 
-  return [
-    "DECISION-MAKING STYLE INVENTORY",
-    primaryLine,
-    `Secondary style: ${styleProfiles[secondaryKey].label}`,
-    "",
-    "Scores",
-    ...scoreLines,
-    `Total: ${sumScores(scores)} / ${TOTAL_ASSESSMENT_SCORE}`,
-    "",
-    "What I tend to contribute",
-    ...primaryProfile.strengths.map((strength) => `- ${strength}`),
-    "",
-    `Profile combination: ${blend.title}`,
-    blend.description,
-    "",
-    `Stretch question: ${primaryProfile.stretch}`,
-    "",
-    "Results describe preferences for reflection and discussion. They are not a psychological diagnosis.",
-    "https://mralexgarrido.github.io/dmsi/",
-  ].join("\n");
+  showResultActionStatus("Full results downloaded as a text file.");
 }
 
-function showCopyStatus(message) {
-  window.clearTimeout(copyStatusTimer);
-  elements.copyStatus.textContent = message;
-  copyStatusTimer = window.setTimeout(() => {
-    elements.copyStatus.textContent = "";
+function showResultActionStatus(message) {
+  window.clearTimeout(resultActionStatusTimer);
+  elements.resultActionStatus.textContent = message;
+  resultActionStatusTimer = window.setTimeout(() => {
+    elements.resultActionStatus.textContent = "";
   }, 5000);
 }
 

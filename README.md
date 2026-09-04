@@ -13,9 +13,11 @@ The application is intentionally dependency-free. It runs as a static site on Gi
 - A guided, one-question-at-a-time assessment that works well on phones and desktops
 - Automatic forced ranking with the original 8, 4, 2, and 1 scoring pattern
 - Clear progress, undo, back navigation, and local progress saving
+- Light and dark themes with a remembered device preference and system-aware first visit
 - A practical results dashboard with strengths, watch-outs, a stretch question, and a useful counterweight
 - Two-style interpretation designed for creative-team discussion
-- Print and Save as PDF support for classroom use
+- A full plain-text export containing the profile, scores, and all 20 ranked responses
+- A classroom-ready print layout that can also be saved as PDF through the browser
 - A copyable plain-text summary for learning reflections
 - Keyboard navigation, visible focus states, semantic structure, live status updates, reduced-motion support, and print styling
 - No analytics, advertising, accounts, cookies, external scripts, or data collection
@@ -41,7 +43,9 @@ The four response positions map consistently to Directive, Analytical, Conceptua
 | `css/styles.css` | Responsive design system, components, accessibility states, and print layout |
 | `js/questions.js` | Assessment prompts and interpretation content |
 | `js/scoring.js` | Pure scoring and validation functions |
+| `js/export.js` | Pure text-summary and full-report generation functions |
 | `js/app.js` | Assessment state, rendering, navigation, persistence, and result actions |
+| `js/theme-init.js` | Applies the saved or system theme before the interface renders |
 | `tests/` | Automated checks for scoring, content contracts, privacy defaults, assets, and legacy-link continuity |
 | `scripts/build.mjs` | Creates the static `dist/` deployment artifact |
 | `scripts/serve.mjs` | Runs a dependency-free local development server |
@@ -80,7 +84,7 @@ Only the deployment job receives `pages: write` and `id-token: write`. Validatio
 
 The interface uses buttons rather than drag-only ranking, so the complete assessment can be taken with a keyboard, touch screen, switch control, or screen reader. Status changes are announced through polite live regions. Content remains usable at narrow widths and with reduced motion enabled.
 
-Responses are saved in `localStorage` under `dmsi-assessment-v2`. They remain on the current device unless the participant explicitly copies or prints the result. Clearing site data or using the restart control removes the saved assessment.
+Responses are saved in `localStorage` under `dmsi-assessment-v2`, and the selected appearance is saved under `dmsi-theme`. Assessment data remains on the current device unless the participant explicitly copies, downloads, or prints the result. The plain-text export is assembled entirely in the browser and is not uploaded. Clearing site data or using the restart control removes the saved assessment.
 
 ## Classroom facilitation idea
 

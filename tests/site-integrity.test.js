@@ -16,8 +16,26 @@ test("references local runtime assets that exist", async () => {
     ([, reference]) => reference,
   );
 
-  assert.deepEqual(localReferences.sort(), ["assets/favicon.svg", "css/styles.css", "js/app.js"]);
+  assert.deepEqual(localReferences.sort(), [
+    "assets/favicon.svg",
+    "css/styles.css",
+    "js/app.js",
+    "js/theme-init.js",
+  ]);
   await Promise.all(localReferences.map((reference) => access(path.join(projectRoot, reference))));
+});
+
+test("exposes persistent theme, download, and print controls", async () => {
+  const html = await readProjectFile("index.html");
+
+  assert.match(html, /data-action="toggle-theme"/i);
+  assert.match(html, /data-action="export"/i);
+  assert.match(html, /data-action="print"/i);
+  assert.match(html, /class="print-header"/i);
+  assert.ok(
+    html.indexOf('src="js/theme-init.js"') < html.indexOf('href="css/styles.css"'),
+    "The initial theme must be applied before the stylesheet loads.",
+  );
 });
 
 test("loads no third-party scripts, stylesheets, fonts, or images at runtime", async () => {
