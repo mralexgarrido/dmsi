@@ -59,7 +59,9 @@ export function buildDetailedResultsExport(responses, exportDate = new Date()) {
   const responseLines = questions.flatMap((question, questionIndex) => {
     const rankings = responses[questionIndex].map((optionIndex, rankIndex) => {
       const styleKey = STYLE_KEYS[optionIndex];
-      return `   ${rankIndex + 1}. ${question.options[optionIndex]} (${styleProfiles[styleKey].label}, ${RANK_SCORES[rankIndex]} points)`;
+      const score = RANK_SCORES[rankIndex];
+      const pointLabel = score === 1 ? "point" : "points";
+      return `   ${rankIndex + 1}. ${question.options[optionIndex]} (${styleProfiles[styleKey].label}, ${score} ${pointLabel})`;
     });
 
     return [`${questionIndex + 1}. ${question.prompt}`, ...rankings, ""];
