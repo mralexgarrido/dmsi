@@ -23,7 +23,7 @@
 .review-ranks { margin: 20px 0; padding-left: 24px; }
 .review-ranks li { margin-bottom: 10px; font-size: 0.93rem; }
 .review-ranks strong { color: var(--muted-strong); }
-.playbook-panel { margin-top: 28px; }
+.playbook-panel { margin-top: 28px; padding: clamp(20px, 3vw, 36px); }
 #playbook-title { scroll-margin-top: 30px; }
 .playbook-controls { display: flex; align-items: center; flex-wrap: wrap; gap: 14px; margin-block: 22px; }
 .playbook-controls select { max-width: 100%; min-height: 48px; padding: 10px 36px 10px 14px; border: 1px solid var(--line-strong); border-radius: var(--radius-small); background: var(--surface); color: var(--text); }
