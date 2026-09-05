@@ -2,13 +2,19 @@
 
 [![Validate and deploy DMSI](https://github.com/mralexgarrido/dmsi/actions/workflows/deploy-pages.yml/badge.svg)](https://github.com/mralexgarrido/dmsi/actions/workflows/deploy-pages.yml)
 
-[Open the assessment](https://mralexgarrido.github.io/dmsi/) · [Scoring](docs/SCORING.md) · [Privacy](docs/PRIVACY.md) · [Accessibility](docs/ACCESSIBILITY.md) · [Contributing](CONTRIBUTING.md) · [Maintaining](docs/MAINTAINER_GUIDE.md)
+[Open the assessment](https://mralexgarrido.github.io/dmsi/) · [Scoring](docs/SCORING.md) · [Privacy](docs/PRIVACY.md) · [Accessibility](docs/ACCESSIBILITY.md) · [Contributing](CONTRIBUTING.md) · [Maintaining](docs/MAINTAINER_GUIDE.md) · [Project updates](docs/PROJECT_UPDATES.md)
 
 ![DMSI social preview](assets/social-card.png)
 
 DMSI is a private, classroom-ready reflection tool for exploring four decision-making preferences: Directive, Analytical, Conceptual, and Behavioral. It is designed for students, creative teams, and facilitators who want a useful conversation about how people evaluate options and move work forward.
 
 The application is intentionally dependency-free. It runs as a static site on GitHub Pages, stores responses only in the participant's browser, and does not transmit assessment data.
+
+## Start here
+
+Open the assessment, rank the responses according to how you usually make decisions, and review the resulting preferences. There is no account to create. Use the results as a discussion starting point, then choose one practical behavior to try in your next team decision.
+
+For a class or workshop, review the [scoring explanation](docs/SCORING.md) before facilitating. Participants control whether they copy, print, or export their results. Browser-local progress is convenient for returning to the assessment, but it is not a backup or a shared team dashboard.
 
 | Project status | Details |
 |---|---|
@@ -89,9 +95,9 @@ The build is written to `dist/` and is intentionally excluded from version contr
 The GitHub Actions workflow follows a two-stage release path:
 
 1. Pull requests run syntax checks and the scoring test suite.
-2. A push to `main` validates the code, builds a minimal static artifact, and deploys that artifact to the protected `github-pages` environment.
+2. A push to `main` validates the code, builds a minimal static artifact, and deploys that artifact to the `github-pages` environment.
 
-Only the deployment job receives `pages: write` and `id-token: write`. Validation and build jobs retain read-only repository access.
+Only the deployment job receives `pages: write` and `id-token: write`. Validation and build jobs retain read-only repository access. An environment name alone does not establish its protection settings; maintainers should verify approval requirements in the repository settings.
 
 ## Search and social discovery
 
@@ -129,7 +135,7 @@ This project is an educational self-reflection experience. It is not a psycholog
 
 Focused contributions are welcome. Read [CONTRIBUTING.md](CONTRIBUTING.md) before opening a pull request and use the structured issue forms for [bugs](https://github.com/mralexgarrido/dmsi/issues/new?template=bug_report.yml) or [feature proposals](https://github.com/mralexgarrido/dmsi/issues/new?template=feature_request.yml). Participation is governed by the [Code of Conduct](CODE_OF_CONDUCT.md). Security concerns must be reported privately according to [SECURITY.md](SECURITY.md).
 
-Release history is maintained in [CHANGELOG.md](CHANGELOG.md). GitHub Actions updates are monitored through Dependabot.
+Release history is maintained in [CHANGELOG.md](CHANGELOG.md). GitHub Actions updates are monitored through Dependabot. See [Project updates](docs/PROJECT_UPDATES.md) for how to distinguish a changelog, reviewed release, and deployed version, and for the maintainer's release-note handoff.
 
 ## Cite this project
 
