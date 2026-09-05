@@ -95,6 +95,7 @@
     </script>
     <script src="js/theme-init.js"></script>
     <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/enhancements.css">
     <title>Decision-Making Style Inventory for Creative Teams | DMSI</title>
     <script type="module" src="js/app.js"></script>
   </head>
@@ -139,6 +140,7 @@
     </header>
 
     <main id="main-content" tabindex="-1">
+      <p class="storage-notice shell" data-storage-status role="status" aria-live="polite" hidden></p>
       <section class="view intro-view" id="intro" data-view="intro" aria-labelledby="intro-title">
         <div class="hero shell">
           <div class="hero-copy">
@@ -171,8 +173,8 @@
           <div class="hero-visual" aria-label="The four decision-making styles">
             <div class="matrix-card">
               <div class="matrix-heading">
-                <span>Thinking focus</span>
-                <span>People focus</span>
+                <span>Four useful perspectives</span>
+                <span>No best style</span>
               </div>
               <div class="style-matrix">
                 <article class="matrix-cell">
@@ -215,12 +217,12 @@
             <li>
               <span class="step-number">02</span>
               <h3>Rank all four responses</h3>
-              <p>Select from most like you to least like you. The tool handles every score automatically.</p>
+              <p>Choose your first three preferences. The remaining statement is ranked last automatically. Review before continuing.</p>
             </li>
             <li>
               <span class="step-number">03</span>
               <h3>Use the profile</h3>
-              <p>Review your strengths, pressure points, and the styles that can balance your perspective.</p>
+              <p>Explore your preferences, then personalize a practical “How to work with me” playbook.</p>
             </li>
           </ol>
         </section>
@@ -258,7 +260,7 @@
             <p class="eyebrow">Your usual work behavior</p>
             <h1 id="question-title" data-question-title tabindex="-1">My prime objective is to:</h1>
             <p id="rank-instruction" class="question-instruction">
-              Choose one statement for each rank, from Most like me to Least like me.
+              Choose Most like me, More like me, then Less like me. The remaining statement is ranked last automatically. You can change any assigned rank.
             </p>
           </div>
 
@@ -334,7 +336,7 @@
           ></div>
 
           <p
-            class="selection-status visually-hidden"
+            class="selection-status"
             id="selection-status"
             role="status"
             aria-live="polite"
@@ -346,6 +348,7 @@
           <div class="question-tools">
             <button class="text-button" type="button" data-action="undo" disabled>Undo last</button>
             <button class="text-button" type="button" data-action="clear-question" disabled>Clear ranking</button>
+            <button class="text-button" type="button" data-action="review-answers">Review answers</button>
           </div>
         </article>
 
@@ -359,6 +362,20 @@
         </nav>
       </section>
 
+      <section class="view review-view shell" data-view="review" aria-labelledby="review-title" hidden>
+        <header class="review-header">
+          <p class="eyebrow">Your choices, at a glance</p>
+          <h1 id="review-title" data-review-title tabindex="-1">Review your answers</h1>
+          <p data-review-count></p>
+          <p class="review-note">There are no ideal answers. Your scores stay hidden here so you can focus on what fits your experience.</p>
+          <div class="results-actions">
+            <button class="button button-primary" type="button" data-action="review-results" disabled>See my results</button>
+            <button class="button button-secondary" type="button" data-action="review-resume">Back to assessment</button>
+          </div>
+        </header>
+        <div class="review-grid" data-review-list></div>
+      </section>
+
       <section class="view results-view shell" data-view="results" aria-labelledby="results-title" hidden>
         <div class="print-header" aria-hidden="true">
           <span><strong>DMSI</strong> · Decision-Making Style Inventory</span>
@@ -366,7 +383,7 @@
         </div>
         <header class="results-hero">
           <p class="eyebrow">Your decision-making profile</p>
-          <h1 id="results-title" data-result-title tabindex="-1">Your primary style is Conceptual.</h1>
+          <h1 id="results-title" data-result-title tabindex="-1">Your decision-making profile</h1>
           <p class="results-lede" data-result-lede></p>
           <div class="results-actions">
             <button class="button button-primary" type="button" data-action="export">
@@ -374,6 +391,8 @@
             </button>
             <button class="button button-secondary" type="button" data-action="print">Print results</button>
             <button class="button button-secondary" type="button" data-action="copy">Copy summary</button>
+            <button class="button button-secondary" type="button" data-action="review-answers">Review answers</button>
+            <a class="button button-secondary" href="#playbook-title" data-action="jump-playbook">My playbook</a>
           </div>
           <p class="result-action-status" role="status" aria-live="polite" data-result-action-status></p>
         </header>
@@ -385,15 +404,16 @@
               <h2 id="score-title">Preference pattern</h2>
             </div>
             <div class="score-list" data-score-list></div>
+            <p class="score-gap" data-score-gap></p>
             <p class="score-note">
-              Each style can score from 20 to 160 points. All four scores total 300.
+              Each style can score from 20 to 160 points. All four scores total 300. These are relative preferences, not percentages of ability.
             </p>
           </section>
 
           <section class="profile-panel panel" aria-labelledby="profile-title">
             <div class="panel-heading">
               <p class="eyebrow" data-profile-label>Primary style</p>
-              <h2 id="profile-title" data-profile-name>Conceptual</h2>
+              <h2 id="profile-title" data-profile-name></h2>
             </div>
             <p class="profile-tagline" data-profile-tagline></p>
             <p data-profile-description></p>
@@ -429,6 +449,29 @@
           </div>
         </section>
 
+        <section class="playbook-panel panel" aria-labelledby="playbook-title">
+          <div class="panel-heading">
+            <p class="eyebrow">Make this useful tomorrow</p>
+            <h2 id="playbook-title" tabindex="-1">How to work with me</h2>
+          </div>
+          <p>A starting draft, not a label. Edit anything that does not fit your experience. Your wording stays in this browser unless you choose to copy, download, or print it.</p>
+          <p class="playbook-stale" data-playbook-stale hidden>You revised your answers. Your custom wording has been kept. Review it against your updated profile, or create a new starting draft below.</p>
+          <div class="playbook-controls">
+            <label for="playbook-context">Use this for</label>
+            <select id="playbook-context" data-playbook-context>
+              <option value="work">Workplace collaboration</option>
+              <option value="class">A group project</option>
+            </select>
+          </div>
+          <div class="playbook-form" data-playbook-fields></div>
+          <div class="results-actions playbook-controls">
+            <button class="button button-primary" type="button" data-action="copy-playbook">Copy my playbook</button>
+            <button class="button button-secondary" type="button" data-action="download-playbook">Download playbook (.txt)</button>
+            <button class="text-button" type="button" data-action="reset-playbook">Create a new starting draft</button>
+          </div>
+          <p class="playbook-status" data-playbook-status role="status" aria-live="polite"></p>
+        </section>
+
         <section class="team-section" aria-labelledby="team-title">
           <div class="section-heading">
             <p class="eyebrow">Turn insight into practice</p>
@@ -460,11 +503,19 @@
 
         <div class="restart-row">
           <button class="text-button danger-text" type="button" data-action="restart">
-            Clear my responses and start again
+            Clear my responses and playbook
           </button>
         </div>
       </section>
     </main>
+
+    <dialog class="rank-editor" data-rank-editor aria-labelledby="rank-editor-title" aria-describedby="rank-editor-help">
+      <h2 id="rank-editor-title">Change rank</h2>
+      <p class="rank-editor-statement" data-rank-editor-statement></p>
+      <p id="rank-editor-help">Choose an assigned rank to exchange the two statements. All other statements stay in place.</p>
+      <div class="rank-editor-choices" data-rank-editor-choices></div>
+      <button class="text-button" type="button" data-action="close-rank-editor" autofocus>Cancel. Keep my ranking</button>
+    </dialog>
 
     <footer class="site-footer">
       <div class="shell footer-grid">
