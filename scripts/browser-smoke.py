@@ -60,7 +60,10 @@ with sync_playwright() as pw:
     page.locator('[data-action="undo"]').click()
     assert response(page)==[0,1,2,3]
     record('Rank swaps, undo of swaps and auto-fill, and clear/undo preserve other answers')
+    # Undo restores focus on the next animation frame. Await that documented UI update.
+    expect(page.locator('[data-question-title]')).to_be_focused()
     page.locator('[data-option-index="1"]').focus()
+    expect(page.locator('[data-option-index="1"]')).to_be_focused()
     page.keyboard.press('Enter')
     expect(page.locator('dialog')).to_be_visible()
     for _ in range(8):
