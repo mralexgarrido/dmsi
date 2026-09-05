@@ -107,6 +107,7 @@ function initialize() {
 }
 
 function bindActions() {
+  elements.rankEditor.addEventListener("keydown", containRankEditorFocus);
   elements.themeToggle.addEventListener("click", toggleTheme);
   elements.startButton.addEventListener("click", startOrResumeAssessment);
   elements.headerAction.addEventListener("click", saveAndExit);
@@ -807,4 +808,21 @@ function downloadText(text, filename) {
   downloadLink.click();
   downloadLink.remove();
   window.setTimeout(() => URL.revokeObjectURL(downloadUrl), 1000);
+}
+
+// Explicit wrapping also keeps keyboard focus inside the native dialog in headless Chromium.
+function containRankEditorFocus(event) {
+  if (event.key !== "Tab") return;
+  const controls = [...elements.rankEditor.querySelectorAll("button:not(:disabled)")];
+  const first = controls[0];
+  const last = controls.at(-1);
+  if (!first) return;
+  const active = document.activeElement;
+  if (event.shiftKey && (active === first || !elements.rankEditor.contains(active))) {
+    event.preventDefault();
+    last.focus();
+  } else if (!event.shiftKey && (active === last || !elements.rankEditor.contains(active))) {
+    event.preventDefault();
+    first.focus();
+  }
 }
