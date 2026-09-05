@@ -20,6 +20,7 @@ test("references local runtime assets that exist", async () => {
     "assets/apple-touch-icon.png",
     "assets/favicon-32.png",
     "assets/favicon.svg",
+    "css/enhancements.css",
     "css/styles.css",
     "js/app.js",
     "js/theme-init.js",
@@ -77,7 +78,7 @@ test("exposes redundant, reduced-motion-safe ranking cues", async () => {
   assert.match(html, /data-rank-remaining>4 choices remaining/);
   assert.match(html, /★[\s\S]+Most like me<\/strong><small>8 points/);
   assert.match(html, /▼[\s\S]+Least like me<\/strong><small>1 point/);
-  assert.match(html, /class="selection-status visually-hidden"/);
+  assert.match(html, /class="selection-status"/);
   assert.match(script, /function renderRankProgress\(progress\)/);
   assert.match(script, /button\.classList\.add\("is-new-rank"\)/);
   assert.doesNotMatch(script, /is-current-choice/);

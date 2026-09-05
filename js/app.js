@@ -1,4 +1,4 @@
-import { blendProfiles, questions, styleOrder, styleProfiles } from "./questions.js";
+import { questions, styleOrder, styleProfiles } from "./questions.js";
 import {
   buildDetailedResultsExport,
   buildResultsSummary,
@@ -9,15 +9,15 @@ import {
   MAX_STYLE_SCORE,
   RANK_SCORES,
   STYLE_KEYS,
-  calculateScores,
-  getBlendKey,
-  getLeadingStyleKeys,
-  getLowestStyleKey,
   isCompleteResponse,
   isValidAssessment,
-  rankStyles,
 } from "./scoring.js";
 import { RANK_LABELS, getRankProgress } from "./rank-progress.js";
+
+import { getResultData } from "./interpretation.js";
+import { selectRank, swapRank, undoRanking } from "./ranking.js";
+import { sanitizePlaybook } from "./playbook.js";
+import { createPlaybookView } from "./playbook-view.js";
 
 const STORAGE_KEY = "dmsi-assessment-v2";
 const THEME_STORAGE_KEY = "dmsi-theme";
@@ -25,6 +25,15 @@ const STATE_VERSION = 2;
 
 const elements = {
   views: [...document.querySelectorAll("[data-view]")],
+  storageStatus: document.querySelector("[data-storage-status]"),
+  rankEditor: document.querySelector("[data-rank-editor]"),
+  rankEditorStatement: document.querySelector("[data-rank-editor-statement]"),
+  rankEditorChoices: document.querySelector("[data-rank-editor-choices]"),
+  reviewTitle: document.querySelector("[data-review-title]"),
+  reviewList: document.querySelector("[data-review-list]"),
+  reviewCount: document.querySelector("[data-review-count]"),
+  reviewResults: document.querySelector("[data-action='review-results']"),
+  scoreGap: document.querySelector("[data-score-gap]"),
   themeToggle: document.querySelector("[data-action='toggle-theme']"),
   themeLabel: document.querySelector("[data-theme-label]"),
   themeColor: document.querySelector("[data-theme-color]"),
@@ -64,7 +73,10 @@ const elements = {
   printDate: document.querySelector("[data-print-date]"),
 };
 
+let storageIssue = "";
 let state = loadState();
+let rankingHistory = questions.map(() => []);
+const playbookView = createPlaybookView({ getState: () => state, save: saveState, copyText, downloadText });
 let resultActionStatusTimer;
 
 initialize();
@@ -74,6 +86,7 @@ function initialize() {
   renderThemeControl();
   renderStyleGuide();
   renderIntroState();
+  renderStorageStatus();
 
   const requestedView = window.location.hash.replace("#", "");
   let initialView = "intro";
@@ -81,6 +94,9 @@ function initialize() {
   if (requestedView === "results" && isValidAssessment(state.responses)) {
     initialView = "results";
     renderResults();
+  } else if (requestedView === "review" && state.started) {
+    initialView = "review";
+    renderReview();
   } else if (requestedView === "assessment" && state.started) {
     initialView = "assessment";
     renderQuestion();
@@ -91,6 +107,7 @@ function initialize() {
 }
 
 function bindActions() {
+  elements.rankEditor.addEventListener("keydown", containRankEditorFocus);
   elements.themeToggle.addEventListener("click", toggleTheme);
   elements.startButton.addEventListener("click", startOrResumeAssessment);
   elements.headerAction.addEventListener("click", saveAndExit);
@@ -98,6 +115,24 @@ function bindActions() {
   elements.clearQuestionButton.addEventListener("click", clearCurrentQuestion);
   elements.previousButton.addEventListener("click", showPreviousQuestion);
   elements.nextButton.addEventListener("click", showNextQuestion);
+  document.querySelectorAll("[data-action='review-answers']").forEach((button) => {
+    button.addEventListener("click", openReview);
+  });
+  document.querySelector("[data-action='close-rank-editor']").addEventListener("click", () => elements.rankEditor.close());
+  elements.reviewResults.addEventListener("click", finishReview);
+  document.querySelector("[data-action='jump-playbook']").addEventListener("click", (event) => {
+    event.preventDefault();
+    const heading = document.querySelector("#playbook-title");
+    heading.focus({ preventScroll: true });
+    heading.scrollIntoView({ block: "start", behavior: "auto" });
+  });
+  document.querySelector("[data-action='review-resume']").addEventListener("click", () => {
+    state.reviewReturn = false;
+    state.currentQuestion = getResumeQuestionIndex();
+    saveState();
+    renderQuestion();
+    showView("assessment");
+  });
 
   document.querySelectorAll("[data-action='show-intro']").forEach((element) => {
     element.addEventListener("click", (event) => {
@@ -116,6 +151,12 @@ function bindActions() {
     if (requestedView === "results" && isValidAssessment(state.responses)) {
       renderResults();
       showView("results", { updateHistory: false });
+      return;
+    }
+
+    if (requestedView === "review" && state.started) {
+      renderReview();
+      showView("review", { updateHistory: false });
       return;
     }
 
@@ -159,6 +200,8 @@ function createInitialState() {
     version: STATE_VERSION,
     started: false,
     completed: false,
+    reviewReturn: false,
+    playbook: null,
     currentQuestion: 0,
     responses: Array.from({ length: questions.length }, () => []),
   };
@@ -174,7 +217,7 @@ function loadState() {
     }
 
     const parsed = JSON.parse(storedValue);
-    if (parsed.version !== STATE_VERSION || !Array.isArray(parsed.responses)) {
+    if (!parsed || parsed.version !== STATE_VERSION || !Array.isArray(parsed.responses)) {
       return emptyState;
     }
 
@@ -185,11 +228,14 @@ function loadState() {
     return {
       version: STATE_VERSION,
       started: Boolean(parsed.started),
+      reviewReturn: parsed.reviewReturn === true,
+      playbook: sanitizePlaybook(parsed.playbook),
       completed: isValidAssessment(responses),
       currentQuestion: clampQuestionIndex(parsed.currentQuestion),
       responses,
     };
   } catch {
+    storageIssue = "Saved progress could not be read. This visit still works, but progress may not be saved for later.";
     return emptyState;
   }
 }
@@ -226,16 +272,24 @@ function clampQuestionIndex(questionIndex) {
 function saveState() {
   try {
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    storageIssue = "";
   } catch {
-    // The assessment remains functional when browser storage is unavailable.
+    storageIssue = "Progress is available in this tab, but could not be saved for later. Keep this tab open and download your results or playbook when finished.";
   }
+  renderStorageStatus();
+  return storageIssue === "";
 }
 
 function clearSavedState() {
   try {
     window.localStorage.removeItem(STORAGE_KEY);
+    storageIssue = "";
+    renderStorageStatus();
+    return true;
   } catch {
-    // No action is required when browser storage is unavailable.
+    storageIssue = "Saved data could not be cleared. Use your browser's site-data settings to remove older responses and playbook wording. Your current session has not been reset.";
+    renderStorageStatus();
+    return false;
   }
 }
 
@@ -245,7 +299,7 @@ function renderIntroState() {
 
   if (isValidAssessment(state.responses)) {
     elements.startButton.textContent = "View my results";
-    elements.resumeNote.textContent = "Your completed profile is saved on this device.";
+    elements.resumeNote.textContent = storageIssue ? "Your completed profile is available in this tab. See the saving notice above." : "Your completed profile is saved on this device.";
     elements.resumeNote.hidden = false;
     return;
   }
@@ -253,7 +307,7 @@ function renderIntroState() {
   if (hasProgress) {
     const resumeIndex = getResumeQuestionIndex();
     elements.startButton.textContent = `Resume at question ${resumeIndex + 1}`;
-    elements.resumeNote.textContent = `${completedCount} of ${questions.length} questions complete. Your progress is saved on this device.`;
+    elements.resumeNote.textContent = `${completedCount} of ${questions.length} questions complete. ${storageIssue ? "Progress is available in this tab. See the saving notice above." : "Your progress is saved on this device."}`;
     elements.resumeNote.hidden = false;
     return;
   }
@@ -294,11 +348,12 @@ function saveAndExit() {
 }
 
 function showView(viewName, { updateHistory = true, focus = true } = {}) {
+  if (elements.rankEditor.open) elements.rankEditor.close();
   elements.views.forEach((view) => {
     view.hidden = view.dataset.view !== viewName;
   });
 
-  elements.headerAction.hidden = viewName !== "assessment";
+  elements.headerAction.hidden = !["assessment", "review"].includes(viewName);
   document.body.dataset.activeView = viewName;
 
   if (updateHistory) {
@@ -313,13 +368,13 @@ function showView(viewName, { updateHistory = true, focus = true } = {}) {
           ? elements.questionTitle
           : viewName === "results"
             ? elements.resultTitle
-            : document.querySelector("#intro-title");
+            : viewName === "review" ? elements.reviewTitle : document.querySelector("#intro-title");
       focusTarget?.focus({ preventScroll: true });
     });
   }
 }
 
-function renderQuestion({ focusOptionIndex = null, focusTitle = false, animateOptionIndex = null } = {}) {
+function renderQuestion({ focusOptionIndex = null, focusTitle = false, animateOptionIndex = null, message = "" } = {}) {
   const question = questions[state.currentQuestion];
   const response = state.responses[state.currentQuestion];
   const completeCount = countCompletedQuestions();
@@ -350,7 +405,7 @@ function renderQuestion({ focusOptionIndex = null, focusTitle = false, animateOp
       }
       button.setAttribute(
         "aria-label",
-        `${optionText}. Ranked ${RANK_LABELS[rankIndex].phrase}, ${RANK_SCORES[rankIndex]} points. Select to remove this ranking.`,
+        `${optionText}. Ranked ${RANK_LABELS[rankIndex].phrase}, ${RANK_SCORES[rankIndex]} points. Select to change this rank.`,
       );
     } else {
       button.dataset.nextRank = String(nextRankIndex + 1);
@@ -382,7 +437,7 @@ function renderQuestion({ focusOptionIndex = null, focusTitle = false, animateOp
       badgeLabel.textContent = RANK_LABELS[rankIndex].badge;
       const badgeMeta = document.createElement("span");
       badgeMeta.className = "rank-badge-meta";
-      badgeMeta.textContent = `${RANK_LABELS[rankIndex].short} choice · ${RANK_SCORES[rankIndex]} points`;
+      badgeMeta.textContent = `${RANK_LABELS[rankIndex].short} choice · ${RANK_SCORES[rankIndex]} ${RANK_SCORES[rankIndex] === 1 ? "point" : "points"} · Change rank`;
       badgeCopy.append(badgeLabel, badgeMeta);
     } else {
       const badgeLabel = document.createElement("span");
@@ -401,14 +456,14 @@ function renderQuestion({ focusOptionIndex = null, focusTitle = false, animateOp
   });
 
   const isComplete = rankProgress.isComplete;
-  elements.selectionStatus.textContent = rankProgress.statusMessage;
+  elements.selectionStatus.textContent = message || (isComplete ? "All four ranked. Select a statement to change its rank, or continue when ready." : rankProgress.statusMessage);
 
-  elements.undoButton.disabled = response.length === 0;
+  elements.undoButton.disabled = response.length === 0 && rankingHistory[state.currentQuestion].length === 0;
   elements.clearQuestionButton.disabled = response.length === 0;
   elements.previousButton.disabled = state.currentQuestion === 0;
   elements.nextButton.disabled = !isComplete;
   elements.nextButton.textContent =
-    state.currentQuestion === questions.length - 1 ? "See my results" : "Continue";
+    state.reviewReturn ? "Return to review" : state.currentQuestion === questions.length - 1 ? "Review my answers" : "Continue";
 
   window.requestAnimationFrame(() => {
     if (focusTitle) {
@@ -454,38 +509,28 @@ function renderRankProgress(progress) {
 
 function selectOption(optionIndex) {
   const response = state.responses[state.currentQuestion];
-  const existingRankIndex = response.indexOf(optionIndex);
-  let animateOptionIndex = null;
-
-  if (existingRankIndex !== -1) {
-    response.splice(existingRankIndex, 1);
-  } else if (response.length < STYLE_KEYS.length) {
-    response.push(optionIndex);
-    animateOptionIndex = optionIndex;
+  if (response.includes(optionIndex)) {
+    openRankEditor(optionIndex);
+    return;
   }
-
-  state.completed = false;
-  saveState();
-  renderQuestion({ focusOptionIndex: optionIndex, animateOptionIndex });
+  const wasAutoFilled = response.length === 2;
+  updateResponse(selectRank(response, optionIndex));
+  renderQuestion({ focusOptionIndex: optionIndex, animateOptionIndex: optionIndex,
+    message: wasAutoFilled ? "All four ranked. The remaining statement was placed last automatically. Review your choices, then continue." : "" });
 }
 
 function undoLastSelection() {
-  const response = state.responses[state.currentQuestion];
-  if (response.length === 0) {
-    return;
-  }
-
-  const removedOptionIndex = response.pop();
+  const index = state.currentQuestion;
+  if (state.responses[index].length === 0 && rankingHistory[index].length === 0) return;
+  state.responses[index] = rankingHistory[index].pop() ?? undoRanking(state.responses[index]);
   state.completed = false;
   saveState();
-  renderQuestion({ focusOptionIndex: removedOptionIndex });
+  renderQuestion({ focusTitle: true, message: "Last ranking change undone." });
 }
 
 function clearCurrentQuestion() {
-  state.responses[state.currentQuestion] = [];
-  state.completed = false;
-  saveState();
-  renderQuestion({ focusTitle: true });
+  updateResponse([]);
+  renderQuestion({ focusTitle: true, message: "This question was cleared. Undo restores the previous ranking." });
 }
 
 function showPreviousQuestion() {
@@ -500,29 +545,16 @@ function showPreviousQuestion() {
 }
 
 function showNextQuestion() {
-  if (!isCompleteResponse(state.responses[state.currentQuestion])) {
+  if (!isCompleteResponse(state.responses[state.currentQuestion])) return;
+  if (state.reviewReturn || state.currentQuestion === questions.length - 1) {
+    state.reviewReturn = false;
+    openReview();
     return;
   }
-
-  if (state.currentQuestion < questions.length - 1) {
-    state.currentQuestion += 1;
-    saveState();
-    renderQuestion({ focusTitle: true });
-    window.scrollTo({ top: 0, behavior: "auto" });
-    return;
-  }
-
-  if (!isValidAssessment(state.responses)) {
-    state.currentQuestion = getResumeQuestionIndex();
-    saveState();
-    renderQuestion({ focusTitle: true });
-    return;
-  }
-
-  state.completed = true;
+  state.currentQuestion += 1;
   saveState();
-  renderResults();
-  showView("results");
+  renderQuestion({ focusTitle: true });
+  window.scrollTo({ top: 0, behavior: "auto" });
 }
 
 function countCompletedQuestions() {
@@ -535,42 +567,24 @@ function renderResults() {
     showView("intro");
     return;
   }
-
-  const scores = calculateScores(state.responses);
-  const rankedStyles = rankStyles(scores);
-  const leadingStyleKeys = getLeadingStyleKeys(scores);
-  const primaryKey = rankedStyles[0].key;
-  const secondaryKey = rankedStyles[1].key;
-  const lowestKey = getLowestStyleKey(scores);
-
+  const result = getResultData(state.responses);
   elements.printDate.textContent = `Generated ${formatDisplayDate(new Date())}`;
-
-  renderResultHeading(scores, rankedStyles, leadingStyleKeys);
-  renderScores(rankedStyles, leadingStyleKeys);
-  renderProfile(leadingStyleKeys, primaryKey);
-  renderBlend(leadingStyleKeys, primaryKey, secondaryKey);
-  renderCounterweight(scores, lowestKey);
-}
-
-function renderResultHeading(scores, rankedStyles, leadingStyleKeys) {
-  const primary = styleProfiles[rankedStyles[0].key];
-  const secondary = styleProfiles[rankedStyles[1].key];
-
-  if (leadingStyleKeys.length === 1) {
-    elements.resultTitle.textContent = `Your primary style is ${primary.label}.`;
-    elements.resultLede.textContent = `${primary.tagline} Your secondary preference is ${secondary.label}. Together, they show the approach you are most likely to reach for first, not a limit on how you can decide.`;
-    return;
-  }
-
-  if (leadingStyleKeys.length === 2) {
-    const [firstKey, secondKey] = leadingStyleKeys;
-    elements.resultTitle.textContent = `Your profile blends ${styleProfiles[firstKey].label} and ${styleProfiles[secondKey].label}.`;
-    elements.resultLede.textContent = `Your two highest scores are tied at ${scores[firstKey]} points. Treat both styles as active preferences and use the context of a decision to determine which one should lead.`;
-    return;
-  }
-
-  elements.resultTitle.textContent = "Your profile is broadly balanced.";
-  elements.resultLede.textContent = `${leadingStyleKeys.length} styles share your highest score. You may adapt your approach readily across situations, so your most useful reflection is to notice which style appears under time pressure.`;
+  elements.resultTitle.textContent = result.title;
+  elements.resultLede.textContent = result.lede;
+  elements.scoreGap.textContent = result.gapText;
+  renderScores(result.rankedStyles, result.leadingStyleKeys);
+  elements.profileLabel.textContent = result.profileLabel;
+  elements.profileName.textContent = result.profileName;
+  elements.profileTagline.textContent = result.tagline;
+  elements.profileDescription.textContent = result.description;
+  renderList(elements.strengthList, result.strengths);
+  renderList(elements.watchoutList, result.watchouts);
+  elements.stretchQuestion.textContent = result.stretches.join(" Then ask: ");
+  elements.blendTitle.textContent = result.blend.title;
+  elements.blendDescription.textContent = result.blend.description;
+  elements.counterweightName.textContent = result.counterweightName;
+  elements.counterweightCopy.textContent = result.counterweightCopy;
+  playbookView.render();
 }
 
 function renderScores(rankedStyles, leadingStyleKeys) {
@@ -602,50 +616,6 @@ function renderScores(rankedStyles, leadingStyleKeys) {
     scoreItem.append(scoreHeading, progress);
     elements.scoreList.append(scoreItem);
   });
-}
-
-function renderProfile(leadingStyleKeys, primaryKey) {
-  const profileKeys = leadingStyleKeys.length === 1 ? [primaryKey] : leadingStyleKeys;
-  const profiles = profileKeys.map((styleKey) => styleProfiles[styleKey]);
-
-  elements.profileLabel.textContent = profileKeys.length === 1 ? "Primary style" : "Shared primary styles";
-  elements.profileName.textContent = profiles.map(({ label }) => label).join(" + ");
-  elements.profileTagline.textContent = profiles.map(({ tagline }) => tagline).join(" ");
-  elements.profileDescription.textContent = profiles.map(({ description }) => description).join(" ");
-
-  const strengths = profiles.flatMap(({ strengths: items }) => items).slice(0, profileKeys.length === 1 ? 3 : 4);
-  const watchouts = profiles.flatMap(({ watchouts: items }) => items).slice(0, profileKeys.length === 1 ? 2 : 4);
-  renderList(elements.strengthList, strengths);
-  renderList(elements.watchoutList, watchouts);
-
-  elements.stretchQuestion.textContent = profiles.map(({ stretch }) => stretch).join(" Then ask: ");
-}
-
-function renderBlend(leadingStyleKeys, primaryKey, secondaryKey) {
-  if (leadingStyleKeys.length > 2) {
-    elements.blendTitle.textContent = "The adaptive generalist";
-    elements.blendDescription.textContent =
-      "Your leading scores are distributed across several styles. That range can make you highly adaptive, but it can also make your decision process less visible to others. Name the style you are using at each phase so the team understands when you are exploring, evaluating, aligning, or closing.";
-    return;
-  }
-
-  const blend = blendProfiles[getBlendKey(primaryKey, secondaryKey)];
-  elements.blendTitle.textContent = blend.title;
-  elements.blendDescription.textContent = blend.description;
-}
-
-function renderCounterweight(scores, lowestKey) {
-  const uniqueScores = new Set(Object.values(scores));
-  if (uniqueScores.size === 1) {
-    elements.counterweightName.textContent = "No single low style";
-    elements.counterweightCopy.textContent =
-      "Your scores are evenly distributed. Focus on making your current decision mode explicit so teammates can follow your reasoning.";
-    return;
-  }
-
-  const profile = styleProfiles[lowestKey];
-  elements.counterweightName.textContent = profile.label;
-  elements.counterweightCopy.textContent = profile.counterweight;
 }
 
 function renderList(listElement, items) {
@@ -683,53 +653,16 @@ function renderStyleGuide() {
 }
 
 async function copyResultsSummary() {
-  if (!isValidAssessment(state.responses)) {
-    return;
-  }
-
-  const summary = buildResultsSummary(state.responses);
-
-  try {
-    await navigator.clipboard.writeText(summary);
-    showResultActionStatus("Summary copied to your clipboard.");
-  } catch {
-    const temporaryTextArea = document.createElement("textarea");
-    temporaryTextArea.value = summary;
-    temporaryTextArea.setAttribute("readonly", "");
-    temporaryTextArea.className = "clipboard-fallback";
-    document.body.append(temporaryTextArea);
-    temporaryTextArea.select();
-
-    const copied = document.execCommand("copy");
-    temporaryTextArea.remove();
-    showResultActionStatus(
-      copied
-        ? "Summary copied to your clipboard."
-        : "Copy was unavailable. Download or print your results instead.",
-    );
-  }
+  if (!isValidAssessment(state.responses)) return;
+  const copied = await copyText(buildResultsSummary(state.responses));
+  showResultActionStatus(copied ? "Summary copied to your clipboard." : "Copy was unavailable. Download or print your results instead.");
 }
 
 function exportDetailedResults() {
-  if (!isValidAssessment(state.responses)) {
-    return;
-  }
-
+  if (!isValidAssessment(state.responses)) return;
   const exportDate = new Date();
-  const file = new Blob([buildDetailedResultsExport(state.responses, exportDate)], {
-    type: "text/plain;charset=utf-8",
-  });
-  const downloadUrl = URL.createObjectURL(file);
-  const downloadLink = document.createElement("a");
-
-  downloadLink.href = downloadUrl;
-  downloadLink.download = `dmsi-results-${formatFileDate(exportDate)}.txt`;
-  document.body.append(downloadLink);
-  downloadLink.click();
-  downloadLink.remove();
-  window.setTimeout(() => URL.revokeObjectURL(downloadUrl), 1000);
-
-  showResultActionStatus("Full results downloaded as a text file.");
+  downloadText(buildDetailedResultsExport(state.responses, exportDate, state.playbook), `dmsi-results-${formatFileDate(exportDate)}.txt`);
+  showResultActionStatus("Full results and your playbook downloaded as a text file.");
 }
 
 function showResultActionStatus(message) {
@@ -742,15 +675,154 @@ function showResultActionStatus(message) {
 
 function restartAssessment() {
   const shouldRestart = window.confirm(
-    "Clear all saved responses and begin a new assessment? This action cannot be undone.",
+    "Clear all saved responses and your playbook wording, then begin a new assessment? Download anything you want to keep first. This action cannot be undone.",
   );
 
   if (!shouldRestart) {
     return;
   }
 
-  clearSavedState();
+  if (!clearSavedState()) return;
   state = createInitialState();
+  rankingHistory = questions.map(() => []);
   renderIntroState();
   showView("intro");
+}
+
+function renderStorageStatus() {
+  elements.storageStatus.hidden = !storageIssue;
+  elements.storageStatus.textContent = storageIssue;
+  elements.headerAction.textContent = storageIssue ? "Exit to introduction" : "Save and exit";
+}
+
+function updateResponse(next) {
+  const index = state.currentQuestion;
+  rankingHistory[index].push([...state.responses[index]]);
+  if (rankingHistory[index].length > 50) rankingHistory[index].shift();
+  state.responses[index] = next;
+  state.completed = false;
+  saveState();
+}
+
+function openRankEditor(optionIndex) {
+  const response = state.responses[state.currentQuestion];
+  const currentRank = response.indexOf(optionIndex);
+  elements.rankEditorStatement.textContent = questions[state.currentQuestion].options[optionIndex];
+  elements.rankEditorChoices.replaceChildren();
+  RANK_LABELS.forEach((rank, targetRank) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "button button-secondary";
+    button.textContent = `${rank.badge}${targetRank === currentRank ? " (current)" : targetRank >= response.length ? " (not assigned yet)" : ""}`;
+    button.disabled = targetRank === currentRank || targetRank >= response.length;
+    button.addEventListener("click", () => {
+      updateResponse(swapRank(response, optionIndex, targetRank));
+      elements.rankEditor.close();
+      renderQuestion({ focusOptionIndex: optionIndex,
+        message: `${RANK_LABELS[currentRank].badge} and ${rank.badge} exchanged ranks. Other statements stayed in place.` });
+    });
+    elements.rankEditorChoices.append(button);
+  });
+  elements.rankEditor.showModal();
+}
+
+function openReview() {
+  saveState();
+  renderReview();
+  showView("review");
+}
+
+function renderReview() {
+  const completed = countCompletedQuestions();
+  elements.reviewCount.textContent = `${completed} of ${questions.length} questions fully ranked. ${completed === questions.length ? "Review any answer, then view your results." : "Finish the remaining rankings before viewing results."}`;
+  elements.reviewResults.disabled = !isValidAssessment(state.responses);
+  elements.reviewList.replaceChildren();
+  questions.forEach((question, index) => {
+    const response = state.responses[index];
+    const card = document.createElement("article");
+    card.className = "review-card panel";
+    const heading = document.createElement("h2");
+    heading.textContent = `${index + 1}. ${question.prompt}`;
+    const list = document.createElement("ol");
+    list.className = "review-ranks";
+    [...response, ...question.options.map((_, i) => i).filter((i) => !response.includes(i))].forEach((optionIndex, rank) => {
+      const item = document.createElement("li");
+      const label = document.createElement("strong");
+      label.textContent = rank < response.length ? `${RANK_LABELS[rank].badge}: ` : "Not ranked: ";
+      item.append(label, document.createTextNode(question.options[optionIndex]));
+      list.append(item);
+    });
+    const edit = document.createElement("button");
+    edit.type = "button";
+    edit.className = "button button-secondary";
+    edit.textContent = isCompleteResponse(response) ? "Edit ranking" : "Finish ranking";
+    edit.setAttribute("aria-label", `${edit.textContent} for question ${index + 1}`);
+    edit.addEventListener("click", () => {
+      state.currentQuestion = index;
+      state.reviewReturn = true;
+      saveState();
+      renderQuestion();
+      showView("assessment");
+    });
+    card.append(heading, list, edit);
+    elements.reviewList.append(card);
+  });
+}
+
+function finishReview() {
+  if (!isValidAssessment(state.responses)) return;
+  state.completed = true;
+  state.reviewReturn = false;
+  saveState();
+  renderResults();
+  showView("results");
+}
+
+async function copyText(text) {
+  try {
+    await navigator.clipboard.writeText(text);
+    return true;
+  } catch {
+    const previousFocus = document.activeElement;
+    const temporaryTextArea = document.createElement("textarea");
+    temporaryTextArea.value = text;
+    temporaryTextArea.setAttribute("readonly", "");
+    temporaryTextArea.className = "clipboard-fallback";
+    document.body.append(temporaryTextArea);
+    temporaryTextArea.select();
+    let copied = false;
+    try { copied = document.execCommand("copy"); } catch { /* Download remains available. */ }
+    temporaryTextArea.remove();
+    previousFocus?.focus({ preventScroll: true });
+    return copied;
+  }
+}
+
+function downloadText(text, filename) {
+  const file = new Blob([text], { type: "text/plain;charset=utf-8" });
+  const downloadUrl = URL.createObjectURL(file);
+  const downloadLink = document.createElement("a");
+  downloadLink.href = downloadUrl;
+  downloadLink.download = filename;
+  document.body.append(downloadLink);
+  downloadLink.click();
+  downloadLink.remove();
+  window.setTimeout(() => URL.revokeObjectURL(downloadUrl), 1000);
+}
+
+// Explicit wrapping also keeps keyboard focus inside the native dialog in headless Chromium.
+function containRankEditorFocus(event) {
+  if (event.key !== "Tab") return;
+  const controls = [...elements.rankEditor.querySelectorAll("button:not(:disabled)")];
+  const first = controls[0];
+  const last = controls.at(-1);
+  if (!first) return;
+  const active = document.activeElement;
+  if (event.shiftKey && (active === first || !elements.rankEditor.contains(active))) {
+    event.preventDefault();
+    last.focus();
+  } else if (!event.shiftKey && (active === last || !elements.rankEditor.contains(active))) {
+    event.preventDefault();
+    first.focus();
+  }
 }

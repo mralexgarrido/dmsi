@@ -1,0 +1,54 @@
+/* Focused extensions to the existing DMSI theme. No extra runtime dependencies. */
+.matrix-cell:nth-child(3) { background: transparent; color: var(--text); }
+.matrix-cell:nth-child(3) h2 { color: var(--text-strong); }
+.matrix-cell:nth-child(3) .matrix-number { color: var(--accent-light); }
+.selection-status { min-height: 3.2em; margin: 18px 0 0; color: var(--muted-strong); font-size: 0.9rem; }
+.question-tools { flex-wrap: wrap; }
+.question-tools .text-button, .playbook-controls .text-button { min-height: 44px; }
+.storage-notice { margin-block: 24px; padding: 18px 22px; border: 1px solid var(--accent-border); border-radius: var(--radius-small); background: var(--surface); }
+.score-gap { margin-block: 24px 12px; font-size: 0.95rem; color: var(--muted-strong); }
+.rank-editor { width: min(560px, calc(100% - 32px)); max-height: calc(100dvh - 40px); padding: 28px; overflow-y: auto; border: 1px solid var(--line-strong); border-radius: var(--radius-medium); background: var(--surface); color: var(--text); box-shadow: var(--shadow); }
+.rank-editor::backdrop { background: rgba(0, 0, 0, 0.7); }
+.rank-editor h2 { font-size: 1.6rem; }
+.rank-editor-statement { font-weight: 750; }
+.rank-editor-choices { display: grid; gap: 10px; margin-block: 20px; }
+.rank-editor .text-button { min-height: 44px; }
+.review-view { padding-block: 50px 80px; }
+.review-header { margin-bottom: 34px; }
+.review-header h1 { font-size: clamp(2rem, 5vw, 3.2rem); }
+.review-note { max-width: 700px; color: var(--muted); }
+.review-grid { display: grid; gap: 20px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.review-card { padding: 24px; }
+.review-card h2 { font-size: 1.1rem; line-height: 1.4; }
+.review-ranks { margin: 20px 0; padding-left: 24px; }
+.review-ranks li { margin-bottom: 10px; font-size: 0.93rem; }
+.review-ranks strong { color: var(--muted-strong); }
+.playbook-panel { margin-top: 28px; padding: clamp(20px, 3vw, 36px); }
+#playbook-title { scroll-margin-top: 30px; }
+.playbook-controls { display: flex; align-items: center; flex-wrap: wrap; gap: 14px; margin-block: 22px; }
+.playbook-controls select { max-width: 100%; min-height: 48px; padding: 10px 36px 10px 14px; border: 1px solid var(--line-strong); border-radius: var(--radius-small); background: var(--surface); color: var(--text); }
+.playbook-form { display: grid; gap: 24px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.playbook-field { min-width: 0; }
+.playbook-field:last-child { grid-column: 1 / -1; }
+.playbook-field label { display: block; margin-bottom: 10px; font-weight: 750; }
+.playbook-field textarea { display: block; width: 100%; min-height: 140px; padding: 16px; resize: vertical; border: 1px solid var(--line-strong); border-radius: var(--radius-small); background: var(--bg-raised); color: var(--text); line-height: 1.6; }
+.playbook-field textarea:focus-visible, .playbook-controls select:focus-visible { outline: 3px solid var(--focus); outline-offset: 4px; }
+.playbook-stale { padding: 16px; border: 1px solid var(--accent-border); border-radius: var(--radius-small); background: var(--accent-faint); }
+.playbook-status { min-height: 1.6em; color: var(--muted-strong); }
+.playbook-print { display: none; }
+@media (max-width: 700px) {
+  .review-grid, .playbook-form { grid-template-columns: minmax(0, 1fr); }
+  .review-card { padding: 20px; }
+  .rank-editor { padding: 22px; }
+  .playbook-field textarea { font-size: 16px; }
+  .playbook-controls .button { width: 100%; }
+}
+@media print {
+  .review-view, .rank-editor, .storage-notice, .playbook-controls, .playbook-status,
+  .playbook-field label, .playbook-field textarea { display: none !important; }
+  .playbook-print { display: block; white-space: pre-wrap; overflow-wrap: anywhere; color: #000; }
+  .playbook-form { display: block; }
+  .playbook-field { margin-bottom: 16px; break-inside: avoid; }
+  .playbook-panel { break-inside: auto; }
+  .playbook-panel h2 { break-after: avoid; }
+}

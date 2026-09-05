@@ -1,0 +1,2 @@
+# Development-only browser QA. The shipped app still has no dependencies.
+playwright==1.57.0

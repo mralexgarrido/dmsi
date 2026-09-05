@@ -1,24 +1,16 @@
-import { blendProfiles, questions, styleProfiles } from "./questions.js";
+import { questions, styleProfiles } from "./questions.js";
 import {
   MAX_STYLE_SCORE,
   RANK_SCORES,
   STYLE_KEYS,
   TOTAL_ASSESSMENT_SCORE,
-  calculateScores,
-  getBlendKey,
-  getLeadingStyleKeys,
-  getLowestStyleKey,
-  isValidAssessment,
-  rankStyles,
   sumScores,
 } from "./scoring.js";
 
+import { getResultData } from "./interpretation.js";
+import { buildPlaybookText } from "./playbook.js";
+
 const SITE_URL = "https://mralexgarrido.github.io/dmsi/";
-const ADAPTIVE_GENERALIST = {
-  title: "The adaptive generalist",
-  description:
-    "Your leading scores are distributed across several styles. That range can make you highly adaptive, but it can also make your decision process less visible to others. Name the style you are using at each phase so the team understands when you are exploring, evaluating, aligning, or closing.",
-};
 
 export function buildResultsSummary(responses) {
   const result = getResultData(responses);
@@ -29,33 +21,30 @@ export function buildResultsSummary(responses) {
   return [
     "DECISION-MAKING STYLE INVENTORY",
     result.primaryLine,
-    `Secondary style: ${result.secondaryProfile.label}`,
+    ...(result.secondaryLine ? [result.secondaryLine] : []),
+    "",
+    result.gapText,
     "",
     "Scores",
     ...scoreLines,
     `Total: ${sumScores(result.scores)} / ${TOTAL_ASSESSMENT_SCORE}`,
     "",
     "What I tend to contribute",
-    ...result.primaryProfile.strengths.map((strength) => `- ${strength}`),
+    ...result.strengths.map((strength) => `- ${strength}`),
     "",
     `Profile combination: ${result.blend.title}`,
     result.blend.description,
     "",
-    `Stretch question: ${result.primaryProfile.stretch}`,
+    `Stretch questions: ${result.stretches.join(" Then ask: ")}`,
     "",
     "Results describe preferences for reflection and discussion. They are not a psychological diagnosis.",
     SITE_URL,
   ].join("\n");
 }
 
-export function buildDetailedResultsExport(responses, exportDate = new Date()) {
+export function buildDetailedResultsExport(responses, exportDate = new Date(), playbook = null) {
   const result = getResultData(responses);
-  const profileKeys =
-    result.leadingStyleKeys.length === 1 ? [result.primaryKey] : result.leadingStyleKeys;
-  const profiles = profileKeys.map((styleKey) => styleProfiles[styleKey]);
-  const strengths = profiles.flatMap(({ strengths: items }) => items);
-  const watchouts = profiles.flatMap(({ watchouts: items }) => items);
-  const stretchQuestions = profiles.map(({ stretch }) => stretch);
+  const { strengths, watchouts, stretches: stretchQuestions } = result;
   const responseLines = questions.flatMap((question, questionIndex) => {
     const rankings = responses[questionIndex].map((optionIndex, rankIndex) => {
       const styleKey = STYLE_KEYS[optionIndex];
@@ -69,13 +58,7 @@ export function buildDetailedResultsExport(responses, exportDate = new Date()) {
   const scoreLines = result.rankedStyles.map(
     ({ key, score }) => `- ${styleProfiles[key].label}: ${score} / ${MAX_STYLE_SCORE}`,
   );
-  const counterweightLines =
-    new Set(Object.values(result.scores)).size === 1
-      ? [
-          "No single low style",
-          "Your scores are evenly distributed. Focus on making your current decision mode explicit so teammates can follow your reasoning.",
-        ]
-      : [styleProfiles[result.lowestKey].label, styleProfiles[result.lowestKey].counterweight];
+  const counterweightLines = [result.counterweightName, result.counterweightCopy];
 
   return [
     "DECISION-MAKING STYLE INVENTORY",
@@ -83,7 +66,9 @@ export function buildDetailedResultsExport(responses, exportDate = new Date()) {
     "",
     "PROFILE",
     result.primaryLine,
-    `Secondary style: ${result.secondaryProfile.label}`,
+    ...(result.secondaryLine ? [result.secondaryLine] : []),
+    "",
+    result.gapText,
     "",
     "Scores",
     ...scoreLines,
@@ -104,6 +89,7 @@ export function buildDetailedResultsExport(responses, exportDate = new Date()) {
     "Useful counterweight",
     ...counterweightLines,
     "",
+    ...(playbook ? [buildPlaybookText(playbook), ""] : []),
     "RANKED RESPONSES",
     "Responses are listed from most like me to least like me.",
     "",
@@ -128,34 +114,3 @@ export function formatFileDate(date) {
   return `${year}-${month}-${day}`;
 }
 
-function getResultData(responses) {
-  if (!isValidAssessment(responses)) {
-    throw new TypeError("A complete assessment is required to export results.");
-  }
-
-  const scores = calculateScores(responses);
-  const rankedStyles = rankStyles(scores);
-  const leadingStyleKeys = getLeadingStyleKeys(scores);
-  const primaryKey = rankedStyles[0].key;
-  const secondaryKey = rankedStyles[1].key;
-  const leadingLabels = leadingStyleKeys.map((styleKey) => styleProfiles[styleKey].label);
-  const primaryProfile = styleProfiles[primaryKey];
-
-  return {
-    scores,
-    rankedStyles,
-    leadingStyleKeys,
-    primaryKey,
-    primaryProfile,
-    secondaryProfile: styleProfiles[secondaryKey],
-    lowestKey: getLowestStyleKey(scores),
-    primaryLine:
-      leadingLabels.length === 1
-        ? `Primary style: ${primaryProfile.label}`
-        : `Shared primary styles: ${leadingLabels.join(" + ")}`,
-    blend:
-      leadingStyleKeys.length > 2
-        ? ADAPTIVE_GENERALIST
-        : blendProfiles[getBlendKey(primaryKey, secondaryKey)],
-  };
-}

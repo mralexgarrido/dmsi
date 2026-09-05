@@ -1,0 +1,55 @@
+name: DMSI browser smoke checks
+
+on:
+  pull_request:
+    branches: ["main"]
+    paths:
+      - "index.html"
+      - "js/**"
+      - "css/**"
+      - "assets/**"
+      - "scripts/**"
+      - "tests/**"
+      - ".github/workflows/browser-smoke.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: dmsi-browser-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  browser-smoke:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - name: Check out the proposed code without persisted credentials
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Set up Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 22
+      - name: Build the exact static artifact to test
+        run: npm run build
+      - name: Install isolated development-only browser tools
+        run: |
+          python3 -m venv "$RUNNER_TEMP/dmsi-browser"
+          "$RUNNER_TEMP/dmsi-browser/bin/python" -m pip install -r scripts/browser-requirements.txt
+          "$RUNNER_TEMP/dmsi-browser/bin/python" -m playwright install --with-deps chromium
+      - name: Exercise ranking, review, persistence, playbook, exports, and mobile layouts
+        run: '"$RUNNER_TEMP/dmsi-browser/bin/python" scripts/browser-smoke.py'
+      - name: Save synthetic test evidence and the static review build
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: dmsi-browser-review
+          path: |
+            browser-results/
+            dist/
+          if-no-files-found: warn
+          include-hidden-files: true
+          retention-days: 7
